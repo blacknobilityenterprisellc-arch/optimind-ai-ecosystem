@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev 2>&1 | tee dev.log",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start 2>&1 | tee server.log",
+    "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
