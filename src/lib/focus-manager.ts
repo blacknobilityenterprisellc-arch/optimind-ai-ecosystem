@@ -1,4 +1,5 @@
 // Focus management utilities for better screen reader experience
+import { useRef, useCallback, useEffect } from 'react';
 
 export interface FocusOptions {
   preventScroll?: boolean;

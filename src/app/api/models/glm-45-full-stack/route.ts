@@ -4,60 +4,27 @@ import { zaiApiService } from '@/lib/zai-api-service';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { imageBase64, analysisType, modelId, customPrompt } = body;
+    const { imageBase64, analysisType, customPrompt } = body;
 
-    if (!imageBase64 || !analysisType || !modelId) {
+    if (!imageBase64 || !analysisType) {
       return NextResponse.json(
-        { error: 'Missing required fields: imageBase64, analysisType, modelId' },
+        { error: 'Missing required fields: imageBase64, analysisType' },
         { status: 400 }
       );
     }
 
-    const analysisRequest = {
+    const result = await zaiApiService.analyzeWithModel({
       imageBase64,
       analysisType,
-      modelId,
+      modelId: 'glm-45-full-stack',
       customPrompt
-    };
-
-    const result = await zaiApiService.analyzeWithModel(analysisRequest);
-
-    return NextResponse.json({
-      success: true,
-      data: result
     });
 
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('GLM-4.5 Full Stack analysis error:', error);
+    console.error('GLM-4.5 Full Stack analysis failed:', error);
     return NextResponse.json(
-      { 
-        error: 'Analysis failed',
-        details: error.message 
-      },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET() {
-  try {
-    const modelInfo = await zaiApiService.getModelInfo('glm-45-full-stack');
-    const isOnline = await zaiApiService.testModelConnection('glm-45-full-stack');
-
-    return NextResponse.json({
-      success: true,
-      model: modelInfo,
-      isOnline,
-      status: isOnline ? 'available' : 'offline'
-    });
-
-  } catch (error) {
-    console.error('GLM-4.5 Full Stack status check error:', error);
-    return NextResponse.json(
-      { 
-        error: 'Status check failed',
-        details: error.message 
-      },
+      { error: 'GLM-4.5 Full Stack analysis failed' },
       { status: 500 }
     );
   }

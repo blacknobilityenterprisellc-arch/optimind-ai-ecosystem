@@ -6,8 +6,9 @@ import {
   ZAIAnalysisRequest, 
   ZAIAnalysisResponse, 
   ZAIModelConfig,
-  zaiApiService 
-} from './zai-api-service';
+  ZAIServiceError,
+  zaiClientService 
+} from './zai-client-service';
 
 export interface AIModel {
   id: string;
@@ -50,9 +51,16 @@ export interface MultiModelAIOptions {
   fallbackToBaseModel: boolean;
 }
 
+export interface AnalysisError {
+  code: string;
+  message: string;
+  retryable: boolean;
+  timestamp: Date;
+}
+
 // Convert ZAI models to UI models
-export const getAvailableModels = (options: MultiModelAIOptions): AIModel[] => {
-  const zaiModels = zaiApiService.getAvailableModels();
+export const getAvailableModels = async (options: MultiModelAIOptions): Promise<AIModel[]> => {
+  const zaiModels = await zaiClientService.getAvailableModels();
   
   return zaiModels
     .filter(model => {
@@ -96,18 +104,43 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
   const [availableModels, setAvailableModels] = useState<AIModel[]>([]);
   const [analysisResults, setAnalysisResults] = useState<Map<string, ModelAnalysisResult[]>>(new Map());
   const [modelStatus, setModelStatus] = useState<Map<string, boolean>>(new Map());
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<AnalysisError | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    setAvailableModels(getAvailableModels(options));
-    checkModelStatus();
-  }, [options]);
+    const loadModels = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const models = await getAvailableModels(options);
+        setAvailableModels(models);
+        await checkModelStatus(models);
+        setRetryCount(0); // Reset retry count on success
+      } catch (err) {
+        console.error('Failed to load models:', err);
+        const serviceError = err as ZAIServiceError;
+        setError({
+          code: serviceError.code,
+          message: serviceError.message,
+          retryable: serviceError.retryable,
+          timestamp: new Date()
+        });
+        setRetryCount(prev => prev + 1);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadModels();
+  }, [options, retryCount]); // Retry when retryCount changes
 
-  const checkModelStatus = useCallback(async () => {
+  const checkModelStatus = useCallback(async (models: AIModel[]) => {
     const statusMap = new Map<string, boolean>();
     
-    for (const model of availableModels) {
+    for (const model of models) {
       try {
-        const isOnline = await zaiApiService.testModelConnection(model.id);
+        const isOnline = await zaiClientService.testModelConnection(model.id);
         statusMap.set(model.id, isOnline);
       } catch (error) {
         console.error(`Failed to check status for model ${model.id}:`, error);
@@ -116,7 +149,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     }
     
     setModelStatus(statusMap);
-  }, [availableModels]);
+  }, []);
 
   const analyzeWithModel = useCallback(async (
     photoId: string, 
@@ -125,6 +158,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     analysisType: string
   ): Promise<ModelAnalysisResult> => {
     setIsAnalyzing(true);
+    setError(null);
     
     try {
       // Convert file to base64
@@ -136,7 +170,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
         modelId
       };
 
-      const response = await zaiApiService.analyzeWithModel(request);
+      const response = await zaiClientService.analyzeWithModel(request);
       
       const result: ModelAnalysisResult = {
         modelId: response.modelId,
@@ -155,9 +189,16 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
       });
 
       return result;
-    } catch (error) {
-      console.error('Model analysis failed:', error);
-      throw error;
+    } catch (err) {
+      console.error('Model analysis failed:', err);
+      const serviceError = err as ZAIServiceError;
+      setError({
+        code: serviceError.code,
+        message: serviceError.message,
+        retryable: serviceError.retryable,
+        timestamp: new Date()
+      });
+      throw err;
     } finally {
       setIsAnalyzing(false);
     }
@@ -174,6 +215,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     }
 
     setIsAnalyzing(true);
+    setError(null);
     
     try {
       const base64Image = await fileToBase64(imageFile);
@@ -184,7 +226,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
         modelId: modelIds?.[0] || 'ensemble' // Fallback model ID
       };
 
-      const ensembleResponse = await zaiApiService.performEnsembleAnalysis(request, modelIds);
+      const ensembleResponse = await zaiClientService.performEnsembleAnalysis(request, modelIds);
       
       const modelResults: ModelAnalysisResult[] = ensembleResponse.ensembleResult.modelResults.map(r => ({
         modelId: r.modelId,
@@ -211,9 +253,16 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
       });
 
       return result;
-    } catch (error) {
-      console.error('Ensemble analysis failed:', error);
-      throw error;
+    } catch (err) {
+      console.error('Ensemble analysis failed:', err);
+      const serviceError = err as ZAIServiceError;
+      setError({
+        code: serviceError.code,
+        message: serviceError.message,
+        retryable: serviceError.retryable,
+        timestamp: new Date()
+      });
+      throw err;
     } finally {
       setIsAnalyzing(false);
     }
@@ -236,29 +285,42 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     }
 
     // Quick analysis with first available model to determine best performer
-    const models = getAvailableModels(options);
+    const models = await getAvailableModels(options);
     if (models.length === 0) return 'glm-45v';
 
     // For now, return the flagship model if available, otherwise first model
     const flagshipModel = models.find(m => m.isFlagship);
-    return flagshipModel?.id || models[0].id;
+    return flagshipModel?.id || models[0]?.id || 'glm-45v';
   }, [options]);
 
   const refreshModelStatus = useCallback(() => {
-    checkModelStatus();
-  }, [checkModelStatus]);
+    checkModelStatus(availableModels);
+  }, [availableModels, checkModelStatus]);
+
+  const retryFailedOperation = useCallback(() => {
+    setRetryCount(prev => prev + 1);
+  }, []);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   return {
     isAnalyzing,
     availableModels,
     analysisResults,
     modelStatus,
+    isLoading,
+    error,
+    retryCount,
     analyzeWithModel,
     performEnsembleAnalysis,
     getAnalysisResults,
     getModelStatus,
     autoSelectBestModel,
-    refreshModelStatus
+    refreshModelStatus,
+    retryFailedOperation,
+    clearError
   };
 }
 

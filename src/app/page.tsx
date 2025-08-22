@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo, Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,12 +11,9 @@ import { Paywall } from "@/components/Paywall";
 import { EncryptedVault } from "@/components/EncryptedVault";
 import { AITaggingModule } from "@/components/AITaggingModule";
 import { PremiumBadge, PremiumButton, PremiumFeature } from "@/components/PremiumBadge";
-import { PhotoManager } from "@/components/PhotoManager";
 import { AIEnhancedPhotoManager } from "@/components/AIEnhancedPhotoManager";
 import { MultiModelAIAnalyzer } from "@/components/MultiModelAIAnalyzer";
 import { SecurityDashboard } from "@/components/SecurityDashboard";
-// Temporarily disabled due to syntax errors
-// import { SecurityDashboard } from "@/components/SecurityDashboard";
 import { OnDeviceAnalyzer } from "@/components/OnDeviceAnalyzer";
 import { PINPad } from "@/components/PINPad";
 import { scanMultiplePhotos } from "@/lib/scan-photos";
@@ -38,7 +35,31 @@ import {
   CheckCircle,
   Clock,
   Cpu,
-  Network
+  Network,
+  Zap,
+  BarChart3,
+  Lock,
+  Eye,
+  Filter,
+  Search,
+  TrendingUp,
+  Users,
+  Star,
+  Award,
+  Diamond,
+  Rocket,
+  ShieldCheck,
+  Fingerprint,
+  Database,
+  Cloud,
+  Smartphone,
+  Monitor,
+  Globe,
+  Heart,
+  ThumbsUp,
+  AlertCircle,
+  Info,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,7 +70,7 @@ interface PhotoItem {
   status: "safe" | "flagged" | "pending" | "scanning";
   scanDate?: Date;
   fileSize: number;
-  file?: File; // Store the actual file for scanning
+  file?: File;
   confidence?: number;
   categories?: string[];
   aiAnalysis?: any;
@@ -57,6 +78,17 @@ interface PhotoItem {
   privacyConcerns?: string[];
   privacySuggestions?: string[];
   lastAnalyzed?: Date;
+}
+
+interface UsageStats {
+  storageUsed: number;
+  storageLimit: number;
+  photosScanned: number;
+  scanLimit: number;
+  aiTagsGenerated: number;
+  aiTagLimit: number;
+  vaultAccess: boolean;
+  advancedEditing: boolean;
 }
 
 export default function Home() {
@@ -69,11 +101,60 @@ export default function Home() {
   const [showVault, setShowVault] = useState(false);
   const [showPINPad, setShowPINPad] = useState(false);
   const [activeTab, setActiveTab] = useState("gallery");
+  const [isEnhancedUI, setIsEnhancedUI] = useState(true);
   
   const { toast } = useToast();
   const { isPremium, hasActiveTrial, trialDaysRemaining, subscribe, startFreeTrial, usage } = useSecureSubscription();
   const { isOnline: offlineStatus } = useOfflineStorage();
   const { isHighContrast, toggleHighContrast } = useTheme();
+
+  // Enhanced analytics data
+  const analyticsData = useMemo(() => {
+    const totalPhotos = photos.length;
+    const safePhotos = photos.filter(p => p.status === "safe").length;
+    const flaggedPhotos = photos.filter(p => p.status === "flagged").length;
+    const scannedPhotos = photos.filter(p => p.scanDate).length;
+    const pendingPhotos = photos.filter(p => p.status === "pending").length;
+    
+    return {
+      totalPhotos,
+      safePhotos,
+      flaggedPhotos,
+      scannedPhotos,
+      pendingPhotos,
+      safetyRate: totalPhotos > 0 ? (safePhotos / totalPhotos) * 100 : 0,
+      scanCompletion: totalPhotos > 0 ? (scannedPhotos / totalPhotos) * 100 : 0,
+      avgConfidence: photos.filter(p => p.confidence).reduce((sum, p) => sum + (p.confidence || 0), 0) / photos.filter(p => p.confidence).length || 0
+    };
+  }, [photos]);
+
+  // Premium features showcase
+  const premiumFeatures = useMemo(() => [
+    {
+      icon: <Diamond className="w-6 h-6" />,
+      title: "Unlimited Storage",
+      description: "From 500MB to 1TB encrypted cloud storage",
+      gradient: "gradient-premium"
+    },
+    {
+      icon: <Brain className="w-6 h-6" />,
+      title: "AI Organization",
+      description: "Smart tagging and facial recognition",
+      gradient: "gradient-primary"
+    },
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      title: "Military Security",
+      description: "AES-256 encryption and biometric protection",
+      gradient: "gradient-safety"
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Lightning Fast",
+      description: "Optimized for mobile and desktop performance",
+      gradient: "gradient-accent"
+    }
+  ], []);
 
   const startScanning = useCallback(async () => {
     const pendingPhotos = photos.filter(p => p.status === "pending" && p.file);
@@ -90,7 +171,6 @@ export default function Home() {
     setCurrentScanningPhoto("");
 
     try {
-      // Update photos to scanning status
       setPhotos(prev => 
         prev.map(photo => 
           photo.status === "pending" 
@@ -109,7 +189,6 @@ export default function Home() {
         }
       );
 
-      // Update photo statuses based on scan results
       setPhotos(prev => 
         prev.map(photo => {
           const result = results.find(r => r.photoId === photo.id);
@@ -141,7 +220,6 @@ export default function Home() {
         variant: "destructive",
       });
 
-      // Reset photos to pending status
       setPhotos(prev => 
         prev.map(photo => 
           photo.status === "scanning" 
@@ -156,12 +234,23 @@ export default function Home() {
     }
   }, [photos, toast]);
 
-  // Register service worker
   useEffect(() => {
     registerServiceWorker();
+    
+    // Monitor online status
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
-  // Keyboard shortcuts
+  // Enhanced keyboard shortcuts
   useNavShortcut({
     key: 's',
     ctrl: true,
@@ -178,7 +267,6 @@ export default function Home() {
     ctrl: true,
     preventDefault: true,
     action: () => {
-      // Trigger file upload
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) {
         fileInput.click();
@@ -254,7 +342,6 @@ export default function Home() {
       title: "PIN Verified",
       description: "Access granted to premium features.",
     });
-    // Here you would typically unlock premium features or navigate to premium content
   };
 
   const handleFilesAdded = useCallback((files: File[]) => {
@@ -264,175 +351,254 @@ export default function Home() {
       url: URL.createObjectURL(file),
       status: "pending",
       fileSize: file.size,
-      file: file, // Store the file for scanning
+      file: file,
     }));
 
     setPhotos(prev => [...prev, ...newPhotos]);
+    toast({
+      title: "Photos Added",
+      description: `${files.length} photo${files.length > 1 ? 's' : ''} uploaded successfully`,
+    });
   }, []);
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
+  const getUsagePercentage = (used: number, limit: number) => {
+    return Math.min((used / limit) * 100, 100);
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-4 py-3">
+      {/* Enhanced Header */}
+      <header className="sticky top-0 z-50 glass-effect border-b">
+        <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 sm:gap-2 flex-wrap min-w-0 flex-1">
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-primary flex-shrink-0" />
-              <h1 className="text-lg sm:text-xl font-bold truncate min-w-0">Private Photo Guardian</h1>
-              <div className="flex items-center gap-1 flex-shrink-0">
-                {isPremium && <PremiumBadge size="sm" text="PRO" />}
+            <div className="flex items-center gap-3 flex-wrap min-w-0 flex-1">
+              <div className="relative">
+                <Shield className="w-7 h-7 text-primary animate-pulse-slow" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold text-gradient truncate">Private Photo Guardian</h1>
+                <p className="text-xs text-muted-foreground truncate">AI-Powered Security & Organization</p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {isPremium && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full">
+                    <Crown className="w-3 h-3 text-white" />
+                    <span className="text-xs font-medium text-white">PRO</span>
+                  </div>
+                )}
                 {hasActiveTrial && (
-                  <Badge variant="outline" className="text-green-400 border-green-400/50 text-xs px-1 py-0" size="sm">
-                    {trialDaysRemaining}d
+                  <Badge variant="outline" className="text-green-400 border-green-400/50 text-xs px-2 py-1">
+                    {trialDaysRemaining}d trial
                   </Badge>
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <HighContrastToggle 
-                className="p-1 sm:p-2 h-auto w-auto text-muted-foreground hover:text-foreground transition-colors"
-              />
-              {isOnline ? (
-                <Wifi className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-              ) : (
-                <WifiOff className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-              )}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <HighContrastToggle className="p-2 h-auto w-auto text-muted-foreground hover:text-foreground transition-colors" />
+              <div className="flex items-center gap-1 px-2 py-1 bg-muted/50 rounded-lg">
+                {isOnline ? (
+                  <><Wifi className="w-4 h-4 text-green-500" /><span className="text-xs text-green-600">Online</span></>
+                ) : (
+                  <><WifiOff className="w-4 h-4 text-gray-400" /><span className="text-xs text-gray-500">Offline</span></>
+                )}
+              </div>
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowVault(true)}
-                className="p-1 sm:p-2 h-auto w-auto"
+                className="p-2 h-auto w-auto"
                 aria-label="Open vault"
               >
-                <Vault className="w-3 h-3 sm:w-4 sm:h-4" />
+                <Vault className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="p-1 sm:p-2 h-auto w-auto" aria-label="Settings">
-                <Settings className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Button variant="ghost" size="sm" className="p-2 h-auto w-auto" aria-label="Settings">
+                <Settings className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6">
-        {/* Upload Section */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="text-center mb-6">
-              <div className="mb-4">
-                <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground" />
+      <main className="container mx-auto px-4 py-6 space-y-6">
+        {/* Enhanced Hero Section */}
+        <Card className="premium-card overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5"></div>
+          <CardContent className="p-6 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Upload Section */}
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gradient">Upload & Secure</h2>
+                    <p className="text-sm text-muted-foreground">Advanced AI-powered photo analysis</p>
+                  </div>
+                </div>
+                
+                <DropZone onFilesAdded={handleFilesAdded} />
+                
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button 
+                    onClick={startScanning}
+                    disabled={isScanning || photos.filter(p => p.status === "pending").length === 0}
+                    className="premium-button flex-1"
+                  >
+                    {isScanning ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Scanning...</>
+                    ) : (
+                      <><Shield className="w-4 h-4 mr-2" />Start Scanning</>
+                    )}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowVault(true)}
+                    className="flex-1"
+                  >
+                    <Vault className="w-4 h-4 mr-2" />
+                    Secure Vault
+                  </Button>
+                </div>
               </div>
-              <h2 className="text-lg font-semibold mb-2">Upload Photos</h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add photos to scan for sensitive content
-              </p>
-              
-              {/* Usage Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                <div className="text-center p-1.5 bg-gray-50 rounded-lg min-w-0">
-                  <p className="text-xs text-gray-500 truncate">Storage</p>
-                  <p className="text-xs font-medium truncate" title={`${Math.round(usage.storageUsed / (1024 * 1024))}MB / ${Math.round(usage.storageLimit / (1024 * 1024))}MB`}>
-                    {Math.round(usage.storageUsed / (1024 * 1024))}MB / {Math.round(usage.storageLimit / (1024 * 1024))}MB
-                  </p>
+
+              {/* Analytics Dashboard */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5" />
+                  Analytics
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-muted/30 rounded-lg border">
+                    <div className="text-2xl font-bold text-primary">{analyticsData.totalPhotos}</div>
+                    <div className="text-xs text-muted-foreground">Total Photos</div>
+                  </div>
+                  <div className="p-3 bg-muted/30 rounded-lg border">
+                    <div className="text-2xl font-bold text-green-600">{analyticsData.safePhotos}</div>
+                    <div className="text-xs text-muted-foreground">Safe</div>
+                  </div>
+                  <div className="p-3 bg-muted/30 rounded-lg border">
+                    <div className="text-2xl font-bold text-red-600">{analyticsData.flaggedPhotos}</div>
+                    <div className="text-xs text-muted-foreground">Flagged</div>
+                  </div>
+                  <div className="p-3 bg-muted/30 rounded-lg border">
+                    <div className="text-2xl font-bold text-blue-600">{Math.round(analyticsData.safetyRate)}%</div>
+                    <div className="text-xs text-muted-foreground">Safety Rate</div>
+                  </div>
                 </div>
-                <div className="text-center p-1.5 bg-gray-50 rounded-lg min-w-0">
-                  <p className="text-xs text-gray-500 truncate">Scans</p>
-                  <p className="text-xs font-medium truncate" title={`${usage.photosScanned} / ${usage.scanLimit}`}>
-                    {usage.photosScanned} / {usage.scanLimit}
-                  </p>
-                </div>
-                <div className="text-center p-1.5 bg-gray-50 rounded-lg min-w-0">
-                  <p className="text-xs text-gray-500 truncate">AI Tags</p>
-                  <p className="text-xs font-medium truncate" title={`${usage.aiTagsGenerated} / ${usage.aiTagLimit}`}>
-                    {usage.aiTagsGenerated} / {usage.aiTagLimit}
-                  </p>
-                </div>
-                <div className="text-center p-1.5 bg-gray-50 rounded-lg min-w-0">
-                  <p className="text-xs text-gray-500 truncate">Status</p>
-                  <p className="text-xs font-medium text-green-600 truncate">
-                    {offlineStatus ? "Online" : "Offline"}
-                  </p>
+
+                {/* Usage Stats */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Storage</span>
+                    <span>{formatFileSize(usage.storageUsed)} / {formatFileSize(usage.storageLimit)}</span>
+                  </div>
+                  <Progress value={getUsagePercentage(usage.storageUsed, usage.storageLimit)} className="h-2" />
+                  
+                  <div className="flex justify-between text-sm">
+                    <span>Scans</span>
+                    <span>{usage.photosScanned} / {usage.scanLimit}</span>
+                  </div>
+                  <Progress value={getUsagePercentage(usage.photosScanned, usage.scanLimit)} className="h-2" />
                 </div>
               </div>
-            </div>
-            
-            <DropZone onFilesAdded={handleFilesAdded} />
-            
-            <div className="flex justify-center mt-6">
-              <Button 
-                onClick={startScanning}
-                disabled={isScanning || photos.filter(p => p.status === "pending").length === 0}
-                className="w-full sm:w-auto"
-              >
-                <Shield className="w-4 h-4 mr-2" />
-                {isScanning ? "Scanning..." : "Start Scanning"}
-              </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Scanning Progress */}
+        {/* Enhanced Scanning Progress */}
         {isScanning && (
-          <Card className="mb-6">
+          <Card className="premium-card border-blue-200 bg-blue-50">
             <CardContent className="p-6">
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium">Scanning Photos</h3>
-                  <span className="text-sm text-muted-foreground">{Math.round(scanProgress)}%</span>
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-blue-600 animate-pulse" />
+                    AI Scanning in Progress
+                  </h3>
+                  <span className="text-sm font-medium text-blue-600">{Math.round(scanProgress)}%</span>
                 </div>
-                <Progress value={scanProgress} className="w-full" />
+                <Progress value={scanProgress} className="h-3" />
                 {currentScanningPhoto && (
-                  <p className="text-sm text-muted-foreground truncate" title={`Currently scanning: ${currentScanningPhoto}`}>
-                    Currently scanning: {currentScanningPhoto}
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
+                    Currently analyzing: <span className="font-medium truncate">{currentScanningPhoto}</span>
                   </p>
                 )}
-                <p className="text-xs text-muted-foreground">
-                  Using AI to analyze photos for sensitive content...
-                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
+                    <Brain className="w-3 h-3 text-blue-600" />
+                    <span>AI Content Analysis</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
+                    <Shield className="w-3 h-3 text-blue-600" />
+                    <span>Privacy Detection</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
+                    <Zap className="w-3 h-3 text-blue-600" />
+                    <span>Real-time Processing</span>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Main Content Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-6 gap-1 sm:gap-2 h-auto min-h-[60px] sm:min-h-[48px] p-1 sm:p-2 bg-muted/50 rounded-lg">
-            <TabsTrigger value="gallery" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">Gallery</span>
+        {/* Enhanced Navigation Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-6 gap-2 p-1 bg-muted/50 rounded-xl h-auto">
+            <TabsTrigger value="gallery" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <ImageIcon className="w-5 h-5" />
+              <span className="text-xs font-medium">Gallery</span>
             </TabsTrigger>
-            <TabsTrigger value="organization" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <Brain className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">AI Org</span>
+            <TabsTrigger value="organization" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <Brain className="w-5 h-5" />
+              <span className="text-xs font-medium">AI Org</span>
             </TabsTrigger>
-            <TabsTrigger value="ondevice" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <Cpu className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">On-Device</span>
+            <TabsTrigger value="ondevice" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <Cpu className="w-5 h-5" />
+              <span className="text-xs font-medium">On-Device</span>
             </TabsTrigger>
-            <TabsTrigger value="multimodel" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <Network className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">Multi-Model AI</span>
+            <TabsTrigger value="multimodel" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <Network className="w-5 h-5" />
+              <span className="text-xs font-medium">Multi-Model</span>
             </TabsTrigger>
-            <TabsTrigger value="premium" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <Crown className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">Premium</span>
+            <TabsTrigger value="premium" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <Crown className="w-5 h-5" />
+              <span className="text-xs font-medium">Premium</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm h-auto min-h-[44px] sm:min-h-[36px] data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md transition-all duration-200">
-              <Shield className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="truncate text-center">Security</span>
+            <TabsTrigger value="security" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
+              <Shield className="w-5 h-5" />
+              <span className="text-xs font-medium">Security</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="gallery" className="space-y-6">
-            <AIEnhancedPhotoManager
-              photos={photos}
-              onPhotosUpdate={setPhotos}
-              isPremium={isPremium}
-            />
+            <Suspense fallback={<div className="text-center py-8">Loading gallery...</div>}>
+              <AIEnhancedPhotoManager
+                photos={photos}
+                onPhotosUpdate={setPhotos}
+                isPremium={isPremium}
+              />
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="organization" className="space-y-6">
             <PremiumFeature isPremium={!isPremium}>
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-gradient mb-2">AI Organization</h2>
+                <p className="text-muted-foreground">Smart tagging and intelligent photo organization</p>
+              </div>
               <AITaggingModule
                 photos={photos.map(p => ({
                   ...p,
@@ -458,10 +624,8 @@ export default function Home() {
 
           <TabsContent value="ondevice" className="space-y-6">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">V.AI GLM 4.5 On-Device Analysis</h2>
-              <p className="text-gray-600">
-                Analyze photos directly on your device with advanced AI - no server required
-              </p>
+              <h2 className="text-3xl font-bold text-gradient mb-2">On-Device AI</h2>
+              <p className="text-muted-foreground">Private analysis with GLM 4.5 - no server required</p>
             </div>
             <OnDeviceAnalyzer 
               onAnalysisComplete={(result, confidence) => {
@@ -475,10 +639,8 @@ export default function Home() {
 
           <TabsContent value="multimodel" className="space-y-6">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">Multi-Model AI Analysis</h2>
-              <p className="text-gray-600">
-                Advanced analysis with GLM-4.5V, AIR, and ensemble AI capabilities
-              </p>
+              <h2 className="text-3xl font-bold text-gradient mb-2">Multi-Model AI</h2>
+              <p className="text-muted-foreground">Advanced analysis with GLM-4.5V, AIR, and ensemble capabilities</p>
             </div>
             
             {photos.length > 0 ? (
@@ -501,17 +663,17 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <Card>
+              <Card className="premium-card">
                 <CardContent className="p-12 text-center">
                   <Network className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Photos for Analysis</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <h3 className="text-xl font-semibold mb-2">No Photos for Analysis</h3>
+                  <p className="text-muted-foreground mb-6">
                     Upload photos to enable multi-model AI analysis
                   </p>
                   <Button onClick={() => {
                     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
                     if (fileInput) fileInput.click();
-                  }}>
+                  }} className="premium-button">
                     <ImageIcon className="w-4 h-4 mr-2" />
                     Upload Photos
                   </Button>
@@ -521,93 +683,81 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="premium" className="space-y-6">
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
-                    <Crown className="w-10 h-10 text-white" />
+            <Card className="premium-card overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-500/10 to-transparent"></div>
+              <CardContent className="p-8 relative z-10">
+                <div className="text-center mb-8">
+                  <div className="w-24 h-24 mx-auto mb-4 gradient-premium rounded-2xl flex items-center justify-center shadow-premium">
+                    <Crown className="w-12 h-12 text-white animate-float" />
                   </div>
                   
-                  <h2 className="text-2xl font-bold mb-2">Unlock Premium Features</h2>
-                  <p className="text-gray-400 mb-6">
-                    Experience infinite space, intelligent control, and unbreakable security
+                  <h2 className="text-4xl font-bold text-gradient-premium mb-2">Premium Experience</h2>
+                  <p className="text-lg text-muted-foreground mb-6">
+                    Unlock infinite space, intelligent control, and unbreakable security
                   </p>
 
                   {isPremium ? (
-                    <div className="space-y-4">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-full">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
-                        <span className="text-green-400 font-medium">
-                          Premium Active
+                    <div className="space-y-6">
+                      <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border border-green-500/50 rounded-full">
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <span className="text-green-400 font-semibold">
+                          Premium Active - Enjoy All Features
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2">✓ Unlimited Storage</h3>
-                          <p className="text-sm text-gray-600">Endless encrypted cloud space</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2">✓ AI Organization</h3>
-                          <p className="text-sm text-gray-600">Smart tagging and search</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2">✓ Advanced Security</h3>
-                          <p className="text-sm text-gray-600">Biometric vault protection</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2">✓ Priority Support</h3>
-                          <p className="text-sm text-gray-600">24/7 premium assistance</p>
-                        </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {premiumFeatures.map((feature, index) => (
+                          <div key={index} className="p-4 bg-muted/30 rounded-lg border">
+                            <div className={`w-10 h-10 rounded-lg ${feature.gradient} flex items-center justify-center mb-3`}>
+                              {feature.icon}
+                            </div>
+                            <h3 className="font-semibold mb-1">{feature.title}</h3>
+                            <p className="text-sm text-muted-foreground">{feature.description}</p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {hasActiveTrial ? (
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 border border-yellow-500/50 rounded-full">
-                          <Clock className="w-4 h-4 text-yellow-400" />
-                          <span className="text-yellow-400 font-medium">
+                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-yellow-500/20 border border-yellow-500/50 rounded-full">
+                          <Clock className="w-5 h-5 text-yellow-400" />
+                          <span className="text-yellow-400 font-semibold">
                             {trialDaysRemaining} days left in trial
                           </span>
                         </div>
                       ) : (
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-full">
-                          <Sparkles className="w-4 h-4 text-green-400" />
-                          <span className="text-green-400 font-medium">
+                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border border-green-500/50 rounded-full">
+                          <Sparkles className="w-5 h-5 text-green-400" />
+                          <span className="text-green-400 font-semibold">
                             30-day free trial available
                           </span>
                         </div>
                       )}
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2 text-purple-600">Unlimited Storage</h3>
-                          <p className="text-sm text-gray-600">From 500MB to 1TB cloud space</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2 text-blue-600">AI Organization</h3>
-                          <p className="text-sm text-gray-600">Smart tagging and face recognition</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2 text-green-600">Advanced Security</h3>
-                          <p className="text-sm text-gray-600">Military-grade encryption</p>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                          <h3 className="font-semibold mb-2 text-orange-600">Premium Themes</h3>
-                          <p className="text-sm text-gray-600">Exclusive customization options</p>
-                        </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {premiumFeatures.map((feature, index) => (
+                          <div key={index} className="p-4 bg-muted/30 rounded-lg border hover:shadow-md transition-shadow">
+                            <div className={`w-10 h-10 rounded-lg ${feature.gradient} flex items-center justify-center mb-3`}>
+                              {feature.icon}
+                            </div>
+                            <h3 className="font-semibold mb-1">{feature.title}</h3>
+                            <p className="text-sm text-muted-foreground">{feature.description}</p>
+                          </div>
+                        ))}
                       </div>
                       
                       <div className="flex gap-4 justify-center">
                         <Button
                           onClick={() => setShowPINPad(true)}
-                          className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
+                          className="premium-button text-lg px-8 py-3"
                         >
                           {hasActiveTrial ? "Upgrade Now" : "Start Free Trial"}
                         </Button>
                         <Button
                           variant="outline"
                           onClick={() => setShowVault(true)}
+                          className="text-lg px-8 py-3"
                         >
                           <Vault className="w-4 h-4 mr-2" />
                           Try Secure Vault
@@ -621,18 +771,12 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
-            {/* Temporarily disabled due to syntax errors */}
-            {/* <SecurityDashboard /> */}
-            <Card>
-              <CardContent className="p-6 text-center">
-                <p className="text-muted-foreground">Security dashboard temporarily disabled for maintenance</p>
-              </CardContent>
-            </Card>
+            <SecurityDashboard />
           </TabsContent>
         </Tabs>
       </main>
 
-      {/* Modals */}
+      {/* Enhanced Modals */}
       <Paywall
         isOpen={showPaywall}
         onClose={() => setShowPaywall(false)}

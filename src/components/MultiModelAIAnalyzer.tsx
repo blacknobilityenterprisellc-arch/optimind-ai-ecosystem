@@ -15,6 +15,7 @@ import {
   AIModel, 
   ModelAnalysisResult, 
   EnsembleAnalysisResult,
+  AnalysisError,
   multiModelAIUtils 
 } from "@/lib/multi-model-ai";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
@@ -43,7 +44,8 @@ import {
   Award,
   Settings,
   Crown,
-  Gem
+  Gem,
+  RefreshCw
 } from "lucide-react";
 
 interface MultiModelAIAnalyzerProps {
@@ -74,8 +76,12 @@ export function MultiModelAIAnalyzer({
     analyzeWithModel, 
     performEnsembleAnalysis, 
     getAnalysisResults,
-    getModelPerformance,
-    autoSelectBestModel
+    autoSelectBestModel,
+    isLoading,
+    error,
+    retryCount,
+    retryFailedOperation,
+    clearError
   } = useMultiModelAI();
   
   const analysisResults = getAnalysisResults(photoId);
@@ -195,6 +201,77 @@ export function MultiModelAIAnalyzer({
     );
   }
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <Card className={className}>
+        <CardContent className="p-6">
+          <div className="text-center space-y-4">
+            <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto" />
+            <h3 className="text-lg font-semibold">Loading AI Models</h3>
+            <p className="text-sm text-muted-foreground">
+              Initializing advanced AI capabilities...
+            </p>
+            {retryCount > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Retry attempt {retryCount}
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Card className={className}>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="w-5 h-5" />
+              <h3 className="font-semibold">AI Service Error</h3>
+            </div>
+            
+            <Alert className="border-red-200 bg-red-50">
+              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <AlertDescription className="text-red-800">
+                <div className="space-y-2">
+                  <p><strong>Error:</strong> {error.message}</p>
+                  <p className="text-xs"><strong>Code:</strong> {error.code}</p>
+                  <p className="text-xs"><strong>Time:</strong> {error.timestamp.toLocaleTimeString()}</p>
+                </div>
+              </AlertDescription>
+            </Alert>
+
+            <div className="flex gap-2">
+              {error.retryable && (
+                <Button 
+                  onClick={retryFailedOperation}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
+              )}
+              <Button 
+                onClick={clearError}
+                variant="outline"
+                size="sm"
+                className="flex-1"
+              >
+                Dismiss
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -241,8 +318,24 @@ export function MultiModelAIAnalyzer({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ensemble">Ensemble Analysis</SelectItem>
-                  <SelectItem value="single">Single Model</SelectItem>
+                  <SelectItem value="ensemble">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium flex items-center gap-2">
+                        <Network className="w-4 h-4" />
+                        Ensemble Analysis
+                      </div>
+                      <div className="text-xs text-muted-foreground">Multiple AI models for comprehensive results</div>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="single">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium flex items-center gap-2">
+                        <Brain className="w-4 h-4" />
+                        Single Model
+                      </div>
+                      <div className="text-xs text-muted-foreground">Use one selected AI model</div>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -254,12 +347,40 @@ export function MultiModelAIAnalyzer({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="auto">Auto Select</SelectItem>
+                  <SelectItem value="auto">
+                    <div className="flex items-center gap-2">
+                      <Brain className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">Auto Select</div>
+                        <div className="text-xs text-muted-foreground">Automatically choose best model</div>
+                      </div>
+                    </div>
+                  </SelectItem>
                   {availableModels.map(model => (
                     <SelectItem key={model.id} value={model.id}>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-start gap-2 py-1">
                         {getModelIcon(model.id)}
-                        <span>{model.name}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium flex items-center gap-1">
+                            {model.name}
+                            {model.isFlagship && <Crown className="w-3 h-3 text-yellow-500" />}
+                          </div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            {model.description}
+                          </div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {model.capabilities.slice(0, 3).map((capability, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs px-1 py-0">
+                                {capability.replace('-', ' ')}
+                              </Badge>
+                            ))}
+                            {model.capabilities.length > 3 && (
+                              <Badge variant="outline" className="text-xs px-1 py-0">
+                                +{model.capabilities.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </SelectItem>
                   ))}
@@ -274,10 +395,30 @@ export function MultiModelAIAnalyzer({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="comprehensive">Comprehensive</SelectItem>
-                  <SelectItem value="safety">Safety Focus</SelectItem>
-                  <SelectItem value="quality">Quality Focus</SelectItem>
-                  <SelectItem value="privacy">Privacy Focus</SelectItem>
+                  <SelectItem value="comprehensive">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium">Comprehensive Analysis</div>
+                      <div className="text-xs text-muted-foreground">Complete multi-faceted evaluation</div>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="safety">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium">Safety Focus</div>
+                      <div className="text-xs text-muted-foreground">Prioritize content safety detection</div>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="quality">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium">Quality Focus</div>
+                      <div className="text-xs text-muted-foreground">Emphasize image quality assessment</div>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="privacy">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-medium">Privacy Focus</div>
+                      <div className="text-xs text-muted-foreground">Focus on privacy concerns</div>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -307,6 +448,18 @@ export function MultiModelAIAnalyzer({
           </div>
         )}
 
+        {analysisResults.length > 0 && !isAnalyzing && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-green-800">Analysis Complete</span>
+            </div>
+            <p className="text-xs text-green-700 mt-1">
+              {analysisResults.length} model{analysisResults.length > 1 ? 's' : ''} analyzed successfully
+            </p>
+          </div>
+        )}
+
         {isAnalyzing && (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -315,13 +468,29 @@ export function MultiModelAIAnalyzer({
                 {analysisMode === "ensemble" ? "Multi-Model Analysis in Progress..." : "AI Analysis in Progress..."}
               </span>
             </div>
-            <Progress value={75} className="w-full" />
-            <p className="text-xs text-muted-foreground">
-              {analysisMode === "ensemble" 
-                ? "Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, AIR, and base models for comprehensive insights..."
-                : "Analyzing content with advanced AI capabilities..."
-              }
-            </p>
+            <div className="space-y-2">
+              <Progress value={75} className="w-full" />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Processing with AI models</span>
+                <span>75%</span>
+              </div>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Brain className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">Analysis Details</span>
+              </div>
+              <p className="text-xs text-blue-700">
+                {analysisMode === "ensemble" 
+                  ? "Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, AIR, and base models for comprehensive insights..."
+                  : "Analyzing content with advanced AI capabilities..."
+                }
+              </p>
+              <div className="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                <Timer className="w-3 h-3" />
+                <span>Estimated time: 15-30 seconds</span>
+              </div>
+            </div>
           </div>
         )}
 
@@ -445,31 +614,6 @@ export function MultiModelAIAnalyzer({
                           )}
                         </div>
                       </div>
-                      {getModelPerformance(model.id) && (
-                        <div className="mt-3 pt-3 border-t">
-                          <div className="text-xs font-medium mb-1">Performance:</div>
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div>
-                              <div className="text-muted-foreground">Accuracy</div>
-                              <div className={getPerformanceColor(getModelPerformance(model.id)!.accuracy)}>
-                                {Math.round(getModelPerformance(model.id)!.accuracy * 100)}%
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-muted-foreground">Speed</div>
-                              <div className={getPerformanceColor(getModelPerformance(model.id)!.speed)}>
-                                {Math.round(getModelPerformance(model.id)!.speed * 100)}%
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-muted-foreground">Reliability</div>
-                              <div className={getPerformanceColor(getModelPerformance(model.id)!.reliability)}>
-                                {Math.round(getModelPerformance(model.id)!.reliability * 100)}%
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
                     </Card>
                   ))}
                 </div>
@@ -531,48 +675,28 @@ export function MultiModelAIAnalyzer({
                 <h4 className="font-medium">Model Performance Analytics</h4>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {availableModels.map(model => {
-                    const performance = getModelPerformance(model.id);
-                    if (!performance) return null;
-                    
-                    return (
-                      <Card key={model.id} className="p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          {getModelIcon(model.id)}
-                          <h5 className="font-medium">{model.name}</h5>
+                  {availableModels.map(model => (
+                    <Card key={model.id} className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        {getModelIcon(model.id)}
+                        <span className="font-medium">{model.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {model.version}
+                        </Badge>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground">Status:</span>
+                          <Badge variant={model.isAvailable ? "default" : "secondary"}>
+                            {model.isAvailable ? "Available" : "Unavailable"}
+                          </Badge>
                         </div>
-                        <div className="space-y-3">
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Accuracy</span>
-                              <span className={getPerformanceColor(performance.accuracy)}>
-                                {Math.round(performance.accuracy * 100)}%
-                              </span>
-                            </div>
-                            <Progress value={performance.accuracy * 100} />
-                          </div>
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Speed</span>
-                              <span className={getPerformanceColor(performance.speed)}>
-                                {Math.round(performance.speed * 100)}%
-                              </span>
-                            </div>
-                            <Progress value={performance.speed * 100} />
-                          </div>
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Reliability</span>
-                              <span className={getPerformanceColor(performance.reliability)}>
-                                {Math.round(performance.reliability * 100)}%
-                              </span>
-                            </div>
-                            <Progress value={performance.reliability * 100} />
-                          </div>
+                        <div className="text-muted-foreground">
+                          {model.description}
                         </div>
-                      </Card>
-                    );
-                  })}
+                      </div>
+                    </Card>
+                  ))}
                 </div>
               </div>
             </TabsContent>
