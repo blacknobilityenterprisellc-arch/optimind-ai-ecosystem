@@ -17,7 +17,8 @@ import {
   Target,
   Zap,
   Shield,
-  Crown
+  Crown,
+  Lightbulb
 } from "lucide-react";
 
 interface ModelStatus {
@@ -53,6 +54,8 @@ export default function TestModelsPage() {
     switch (modelId) {
       case 'glm-45v':
         return <Target className="w-5 h-5" />;
+      case 'glm-45-auto-think':
+        return <Lightbulb className="w-5 h-5" />;
       case 'glm-45-flagship':
         return <Crown className="w-5 h-5" />;
       case 'air':
@@ -66,6 +69,8 @@ export default function TestModelsPage() {
     switch (modelId) {
       case 'glm-45v':
         return "text-blue-600";
+      case 'glm-45-auto-think':
+        return "text-orange-600";
       case 'glm-45-flagship':
         return "text-yellow-600";
       case 'air':
@@ -153,7 +158,7 @@ export default function TestModelsPage() {
             <h1 className="text-3xl font-bold">Multi-Model AI Test Center</h1>
           </div>
           <p className="text-muted-foreground">
-            Test and validate GLM-4.5V, GLM-4.5 Flagship, AIR, and Base AI models
+            Test and validate GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, AIR, and Base AI models
           </p>
         </div>
 
@@ -346,6 +351,9 @@ export default function TestModelsPage() {
                 <div className="space-y-2 text-sm">
                   <div>
                     <strong>GLM-4.5V:</strong> Advanced visual understanding, multimodal reasoning, scene understanding
+                  </div>
+                  <div>
+                    <strong>GLM-4.5 Auto Think:</strong> Automatic thinking, self-reflection, step-by-step reasoning, meta-cognition
                   </div>
                   <div>
                     <strong>GLM-4.5 Flagship:</strong> Quantum reasoning, universal comprehension, superintelligence, ultimate accuracy

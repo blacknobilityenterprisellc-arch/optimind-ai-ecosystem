@@ -304,21 +304,22 @@ class SecurityMonitor {
     if (typeof document !== 'undefined') {
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-        this.logEvent({
-          type: 'system',
-          severity: 'low',
-          description: 'Application tab hidden',
-          details: { timestamp: new Date().toISOString() }
-        });
-      } else {
-        this.logEvent({
-          type: 'system',
-          severity: 'low',
-          description: 'Application tab visible',
-          details: { timestamp: new Date().toISOString() }
-        });
-      }
-    });
+          this.logEvent({
+            type: 'system',
+            severity: 'low',
+            description: 'Application tab hidden',
+            details: { timestamp: new Date().toISOString() }
+          });
+        } else {
+          this.logEvent({
+            type: 'system',
+            severity: 'low',
+            description: 'Application tab visible',
+            details: { timestamp: new Date().toISOString() }
+          });
+        }
+      });
+    }
   }
 
   private startAnomalyDetection() {
