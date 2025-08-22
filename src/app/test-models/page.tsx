@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AVAILABLE_MODELS } from "@/lib/multi-model-ai";
+import { multiModelAIUtils } from "@/lib/multi-model-ai";
 import { 
   Brain, 
   Network, 
@@ -49,6 +49,11 @@ export default function TestModelsPage() {
   const [modelStatuses, setModelStatuses] = useState<ModelStatus[]>([]);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [availableModels, setAvailableModels] = useState<any[]>([]);
+
+  useEffect(() => {
+    setAvailableModels(multiModelAIUtils.getAvailableModels(multiModelAIUtils.DEFAULT_OPTIONS));
+  }, []);
 
   const getModelIcon = (modelId: string) => {
     switch (modelId) {
@@ -60,6 +65,8 @@ export default function TestModelsPage() {
         return <Crown className="w-5 h-5" />;
       case 'air':
         return <Cpu className="w-5 h-5" />;
+      case 'glm-45-full-stack':
+        return <Network className="w-5 h-5" />;
       default:
         return <Brain className="w-5 h-5" />;
     }
@@ -75,8 +82,10 @@ export default function TestModelsPage() {
         return "text-yellow-600";
       case 'air':
         return "text-purple-600";
-      default:
+      case 'glm-45-full-stack':
         return "text-green-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -139,7 +148,7 @@ export default function TestModelsPage() {
     setTesting(true);
     setError(null);
     
-    const promises = AVAILABLE_MODELS.map(model => testModel(model.id));
+    const promises = availableModels.map(model => testModel(model.id));
     await Promise.all(promises);
     setTesting(false);
   };
@@ -208,7 +217,7 @@ export default function TestModelsPage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {AVAILABLE_MODELS.map(model => {
+              {availableModels.map(model => {
                 const status = modelStatuses.find(s => s.id === model.id);
                 const isAvailable = status?.isAvailable || false;
                 
@@ -334,7 +343,7 @@ export default function TestModelsPage() {
               <div className="space-y-2">
                 <h4 className="font-medium">Available Models</h4>
                 <ul className="space-y-1 text-sm">
-                  {AVAILABLE_MODELS.map(model => (
+                  {availableModels.map(model => (
                     <li key={model.id} className="flex items-center gap-2">
                       {getModelIcon(model.id)}
                       <span>{model.name} ({model.version})</span>
@@ -360,6 +369,9 @@ export default function TestModelsPage() {
                   </div>
                   <div>
                     <strong>AIR:</strong> Logical reasoning, causal inference, predictive analysis, risk assessment
+                  </div>
+                  <div>
+                    <strong>GLM-4.5 Full Stack:</strong> Full-stack analysis, comprehensive reasoning, multi-domain expertise, integrated intelligence
                   </div>
                   <div>
                     <strong>Base Model:</strong> Comprehensive analysis with safety detection and quality assessment

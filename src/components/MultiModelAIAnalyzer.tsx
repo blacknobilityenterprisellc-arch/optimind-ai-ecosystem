@@ -15,7 +15,7 @@ import {
   AIModel, 
   ModelAnalysisResult, 
   EnsembleAnalysisResult,
-  AVAILABLE_MODELS 
+  multiModelAIUtils 
 } from "@/lib/multi-model-ai";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
@@ -145,6 +145,8 @@ export function MultiModelAIAnalyzer({
         return <Crown className="w-4 h-4" />;
       case 'air':
         return <Cpu className="w-4 h-4" />;
+      case 'glm-45-full-stack':
+        return <Network className="w-4 h-4" />;
       default:
         return <Brain className="w-4 h-4" />;
     }
@@ -160,8 +162,10 @@ export function MultiModelAIAnalyzer({
         return "text-yellow-600";
       case 'air':
         return "text-purple-600";
-      default:
+      case 'glm-45-full-stack':
         return "text-green-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -179,7 +183,7 @@ export function MultiModelAIAnalyzer({
             <Network className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Multi-Model AI Analysis</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Unlock advanced GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, and AIR models with our premium features
+              Unlock advanced GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, and AIR models with our premium features
             </p>
             <Button className="w-full">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -314,7 +318,7 @@ export function MultiModelAIAnalyzer({
             <Progress value={75} className="w-full" />
             <p className="text-xs text-muted-foreground">
               {analysisMode === "ensemble" 
-                ? "Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, AIR, and base models for comprehensive insights..."
+                ? "Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, AIR, and base models for comprehensive insights..."
                 : "Analyzing content with advanced AI capabilities..."
               }
             </p>
