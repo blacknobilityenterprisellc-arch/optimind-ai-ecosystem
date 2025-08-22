@@ -45,7 +45,7 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 1rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -87,13 +87,14 @@
   --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   
-  /* Premium shadow definitions */
+  /* Professional shadow definitions */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --shadow-premium: 0 0 20px rgb(251 191 36 / 0.3), 0 0 40px rgb(251 191 36 / 0.1);
+  --shadow-glow: 0 0 20px oklch(0.462 0.218 27.33 / 0.3);
   
   /* Premium animation timings */
   --animation-fast: 150ms;
@@ -144,7 +145,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Premium scrollbar styling */
+  /* Professional scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -165,7 +166,7 @@
     @apply bg-muted-foreground/70;
   }
   
-  /* Premium focus styles */
+  /* Professional focus styles */
   *:focus {
     outline: 2px solid oklch(0.462 0.218 27.33);
     outline-offset: 2px;
@@ -176,7 +177,7 @@
     outline-offset: 2px;
   }
   
-  /* Premium selection styles */
+  /* Professional selection styles */
   ::selection {
     background-color: oklch(0.462 0.218 27.33 / 0.2);
     color: oklch(0.145 0 0);
@@ -213,7 +214,7 @@
     @apply text-xs leading-none px-1 py-0;
   }
   
-  /* Premium utility classes */
+  /* Professional utility classes */
   .gradient-primary {
     background: var(--gradient-primary);
   }
@@ -247,7 +248,7 @@
   }
   
   .shadow-glow {
-    box-shadow: 0 0 20px oklch(0.462 0.218 27.33 / 0.3);
+    box-shadow: var(--shadow-glow);
   }
   
   .animate-float {
@@ -340,7 +341,7 @@
   }
 }
 
-/* Premium animations */
+/* Professional animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -396,7 +397,7 @@
   @apply text-xs leading-none;
 }
 
-/* Premium loading skeleton */
+/* Professional loading skeleton */
 .skeleton-premium {
   @apply animate-pulse bg-gradient-to-r from-muted/50 via-muted to-muted/50;
   background-size: 200% 100%;

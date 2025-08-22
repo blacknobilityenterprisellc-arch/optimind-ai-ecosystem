@@ -386,223 +386,356 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Enhanced Header */}
-      <header className="sticky top-0 z-50 glass-effect border-b">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-slate-700/50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 flex-wrap min-w-0 flex-1">
+            <div className="flex items-center gap-4 flex-wrap min-w-0 flex-1">
               <div className="relative">
-                <Shield className="w-7 h-7 text-primary animate-pulse-slow" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 shadow-sm">
+                  <div className="w-full h-full bg-emerald-500 rounded-full animate-pulse"></div>
+                </div>
               </div>
               <div className="min-w-0">
-                <h1 className="text-xl font-bold text-gradient truncate">Private Photo Guardian</h1>
-                <p className="text-xs text-muted-foreground truncate">AI-Powered Security & Organization</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent truncate">
+                  PhotoGuard Pro
+                </h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400 truncate">AI-Powered Security & Organization</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {isPremium && (
-                  <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full">
-                    <Crown className="w-3 h-3 text-white" />
-                    <span className="text-xs font-medium text-white">PRO</span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow-sm">
+                    <Crown className="w-3.5 h-3.5 text-white" />
+                    <span className="text-xs font-semibold text-white">PRO</span>
                   </div>
                 )}
                 {hasActiveTrial && (
-                  <Badge variant="outline" className="text-green-400 border-green-400/50 text-xs px-2 py-1">
-                    {trialDaysRemaining}d trial
-                  </Badge>
+                  <div className="flex items-center gap-1 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-full">
+                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                      {trialDaysRemaining}d trial
+                    </span>
+                  </div>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <HighContrastToggle className="p-2 h-auto w-auto text-muted-foreground hover:text-foreground transition-colors" />
-              <div className="flex items-center gap-1 px-2 py-1 bg-muted/50 rounded-lg">
+              <HighContrastToggle className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" />
+              <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                 {isOnline ? (
-                  <><Wifi className="w-4 h-4 text-green-500" /><span className="text-xs text-green-600">Online</span></>
+                  <>
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <Wifi className="w-4 h-4 text-emerald-600" />
+                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Online</span>
+                  </>
                 ) : (
-                  <><WifiOff className="w-4 h-4 text-gray-400" /><span className="text-xs text-gray-500">Offline</span></>
+                  <>
+                    <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                    <WifiOff className="w-4 h-4 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Offline</span>
+                  </>
                 )}
               </div>
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowVault(true)}
-                className="p-2 h-auto w-auto"
+                className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
                 aria-label="Open vault"
               >
-                <Vault className="w-4 h-4" />
+                <Vault className="w-5 h-5" />
               </Button>
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowSettings(true)}
-                className="p-2 h-auto w-auto"
+                className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
                 aria-label="Settings"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-5 h-5" />
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
+      <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Enhanced Hero Section */}
-        <Card className="premium-card overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5"></div>
-          <CardContent className="p-6 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-900 shadow-2xl">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="w-full h-full bg-repeat" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px'
+            }}></div>
+          </div>
+          <div className="relative z-10 p-8 md:p-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Upload Section */}
-              <div className="lg:col-span-2 space-y-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
-                    <ImageIcon className="w-6 h-6 text-white" />
+              <div className="lg:col-span-2 space-y-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                    <ImageIcon className="w-8 h-8 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gradient">Upload & Secure</h2>
-                    <p className="text-sm text-muted-foreground">Advanced AI-powered photo analysis</p>
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                      Upload & Secure
+                    </h2>
+                    <p className="text-lg text-white/80">
+                      Advanced AI-powered photo analysis and organization
+                    </p>
                   </div>
                 </div>
                 
-                <DropZone onFilesAdded={handleFilesAdded} />
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <DropZone onFilesAdded={handleFilesAdded} />
+                </div>
                 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     onClick={startScanning}
                     disabled={isScanning || photos.filter(p => p.status === "pending").length === 0}
-                    className="premium-button flex-1"
+                    className="flex-1 bg-white text-blue-600 hover:bg-white/90 font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
                   >
                     {isScanning ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Scanning...</>
+                      <>
+                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                        Scanning...
+                      </>
                     ) : (
-                      <><Shield className="w-4 h-4 mr-2" />Start Scanning</>
+                      <>
+                        <Shield className="w-5 h-5 mr-3" />
+                        Start Scanning
+                      </>
                     )}
                   </Button>
                   <Button 
-                    variant="outline" 
+                    variant="outline"
                     onClick={() => setShowVault(true)}
-                    className="flex-1"
+                    className="flex-1 bg-white/10 text-white border-white/30 hover:bg-white/20 font-semibold py-3 px-6 rounded-xl transition-all duration-300"
                   >
-                    <Vault className="w-4 h-4 mr-2" />
+                    <Vault className="w-5 h-5 mr-3" />
                     Secure Vault
                   </Button>
                 </div>
               </div>
 
               {/* Analytics Dashboard */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" />
-                  Analytics
-                </h3>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-muted/30 rounded-lg border">
-                    <div className="text-2xl font-bold text-primary">{analyticsData.totalPhotos}</div>
-                    <div className="text-xs text-muted-foreground">Total Photos</div>
-                  </div>
-                  <div className="p-3 bg-muted/30 rounded-lg border">
-                    <div className="text-2xl font-bold text-green-600">{analyticsData.safePhotos}</div>
-                    <div className="text-xs text-muted-foreground">Safe</div>
-                  </div>
-                  <div className="p-3 bg-muted/30 rounded-lg border">
-                    <div className="text-2xl font-bold text-red-600">{analyticsData.flaggedPhotos}</div>
-                    <div className="text-xs text-muted-foreground">Flagged</div>
-                  </div>
-                  <div className="p-3 bg-muted/30 rounded-lg border">
-                    <div className="text-2xl font-bold text-blue-600">{Math.round(analyticsData.safetyRate)}%</div>
-                    <div className="text-xs text-muted-foreground">Safety Rate</div>
-                  </div>
-                </div>
-
-                {/* Usage Stats */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Storage</span>
-                    <span>{formatFileSize(usage.storageUsed)} / {formatFileSize(usage.storageLimit)}</span>
-                  </div>
-                  <Progress value={getUsagePercentage(usage.storageUsed, usage.storageLimit)} className="h-2" />
+              <div className="space-y-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <BarChart3 className="w-6 h-6" />
+                    Analytics Dashboard
+                  </h3>
                   
-                  <div className="flex justify-between text-sm">
-                    <span>Scans</span>
-                    <span>{usage.photosScanned} / {usage.scanLimit}</span>
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-1">
+                        {analyticsData.totalPhotos}
+                      </div>
+                      <div className="text-sm text-white/70">Total Photos</div>
+                    </div>
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                      <div className="text-3xl font-bold text-emerald-300 mb-1">
+                        {analyticsData.safePhotos}
+                      </div>
+                      <div className="text-sm text-white/70">Safe</div>
+                    </div>
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                      <div className="text-3xl font-bold text-red-300 mb-1">
+                        {analyticsData.flaggedPhotos}
+                      </div>
+                      <div className="text-sm text-white/70">Flagged</div>
+                    </div>
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                      <div className="text-3xl font-bold text-blue-300 mb-1">
+                        {Math.round(analyticsData.safetyRate)}%
+                      </div>
+                      <div className="text-sm text-white/70">Safety Rate</div>
+                    </div>
                   </div>
-                  <Progress value={getUsagePercentage(usage.photosScanned, usage.scanLimit)} className="h-2" />
+
+                  {/* Usage Stats */}
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm text-white/80 mb-2">
+                        <span>Storage Used</span>
+                        <span>{formatFileSize(usage.storageUsed)} / {formatFileSize(usage.storageLimit)}</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-3">
+                        <div 
+                          className="bg-gradient-to-r from-blue-400 to-indigo-400 h-3 rounded-full transition-all duration-300"
+                          style={{ width: `${getUsagePercentage(usage.storageUsed, usage.storageLimit)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm text-white/80 mb-2">
+                        <span>Scans Used</span>
+                        <span>{usage.photosScanned} / {usage.scanLimit}</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-3">
+                        <div 
+                          className="bg-gradient-to-r from-emerald-400 to-green-400 h-3 rounded-full transition-all duration-300"
+                          style={{ width: `${getUsagePercentage(usage.photosScanned, usage.scanLimit)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Enhanced Scanning Progress */}
         {isScanning && (
-          <Card className="premium-card border-blue-200 bg-blue-50">
-            <CardContent className="p-6">
-              <div className="space-y-4">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 shadow-xl">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="absolute top-0 left-0 w-full h-full opacity-10">
+              <div className="w-full h-full bg-repeat" style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: '40px 40px'
+              }}></div>
+            </div>
+            <div className="relative z-10 p-8">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-blue-600 animate-pulse" />
-                    AI Scanning in Progress
-                  </h3>
-                  <span className="text-sm font-medium text-blue-600">{Math.round(scanProgress)}%</span>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                      <Shield className="w-6 h-6 text-white animate-pulse" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">
+                        AI Scanning in Progress
+                      </h3>
+                      <p className="text-blue-100 text-sm">
+                        Advanced analysis powered by multiple AI models
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {Math.round(scanProgress)}%
+                    </div>
+                    <div className="text-sm text-blue-100">Complete</div>
+                  </div>
                 </div>
-                <Progress value={scanProgress} className="h-3" />
+                
+                <div className="w-full bg-white/20 rounded-full h-4">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-400 to-green-400 h-4 rounded-full transition-all duration-500 ease-out shadow-lg"
+                    style={{ width: `${scanProgress}%` }}
+                  ></div>
+                </div>
+                
                 {currentScanningPhoto && (
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Eye className="w-4 h-4" />
-                    Currently analyzing: <span className="font-medium truncate">{currentScanningPhoto}</span>
-                  </p>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <p className="text-white flex items-center gap-3">
+                      <Eye className="w-5 h-5 text-blue-200" />
+                      <span className="font-medium">Currently analyzing:</span>
+                      <span className="text-blue-100 truncate">{currentScanningPhoto}</span>
+                    </p>
+                  </div>
                 )}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
-                    <Brain className="w-3 h-3 text-blue-600" />
-                    <span>AI Content Analysis</span>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="flex items-center gap-3">
+                      <Brain className="w-6 h-6 text-blue-200" />
+                      <div>
+                        <div className="text-sm font-medium text-white">AI Content Analysis</div>
+                        <div className="text-xs text-blue-100">Deep learning models</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
-                    <Shield className="w-3 h-3 text-blue-600" />
-                    <span>Privacy Detection</span>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="flex items-center gap-3">
+                      <Shield className="w-6 h-6 text-emerald-200" />
+                      <div>
+                        <div className="text-sm font-medium text-white">Privacy Detection</div>
+                        <div className="text-xs text-blue-100">Advanced security</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 p-2 bg-blue-100/50 rounded">
-                    <Zap className="w-3 h-3 text-blue-600" />
-                    <span>Real-time Processing</span>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="flex items-center gap-3">
+                      <Zap className="w-6 h-6 text-yellow-200" />
+                      <div>
+                        <div className="text-sm font-medium text-white">Real-time Processing</div>
+                        <div className="text-xs text-blue-100">Instant results</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Enhanced Navigation Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-6 gap-2 p-1 bg-muted/50 rounded-xl h-auto">
-            <TabsTrigger value="gallery" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <ImageIcon className="w-5 h-5" />
-              <span className="text-xs font-medium">Gallery</span>
-            </TabsTrigger>
-            <TabsTrigger value="organization" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <Brain className="w-5 h-5" />
-              <span className="text-xs font-medium">AI Org</span>
-            </TabsTrigger>
-            <TabsTrigger value="ondevice" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <Cpu className="w-5 h-5" />
-              <span className="text-xs font-medium">On-Device</span>
-            </TabsTrigger>
-            <TabsTrigger value="multimodel" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <Network className="w-5 h-5" />
-              <span className="text-xs font-medium">Multi-Model</span>
-            </TabsTrigger>
-            <TabsTrigger value="premium" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <Crown className="w-5 h-5" />
-              <span className="text-xs font-medium">Premium</span>
-            </TabsTrigger>
-            <TabsTrigger value="security" className="flex flex-col items-center gap-2 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all">
-              <Shield className="w-5 h-5" />
-              <span className="text-xs font-medium">Security</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-2">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-6 gap-2 bg-transparent h-auto">
+              <TabsTrigger 
+                value="gallery" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <ImageIcon className="w-6 h-6" />
+                <span className="text-sm font-medium">Gallery</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="organization" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-50 dark:data-[state=active]:bg-purple-900/20 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-400 data-[state=active]:border-purple-200 dark:data-[state=active]:border-purple-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Brain className="w-6 h-6" />
+                <span className="text-sm font-medium">AI Org</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="ondevice" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-green-50 dark:data-[state=active]:bg-green-900/20 data-[state=active]:text-green-600 dark:data-[state=active]:text-green-400 data-[state=active]:border-green-200 dark:data-[state=active]:border-green-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Cpu className="w-6 h-6" />
+                <span className="text-sm font-medium">On-Device</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="multimodel" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-orange-50 dark:data-[state=active]:bg-orange-900/20 data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 data-[state=active]:border-orange-200 dark:data-[state=active]:border-orange-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Network className="w-6 h-6" />
+                <span className="text-sm font-medium">Multi-Model</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="premium" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-amber-50 dark:data-[state=active]:bg-amber-900/20 data-[state=active]:text-amber-600 dark:data-[state=active]:text-amber-400 data-[state=active]:border-amber-200 dark:data-[state=active]:border-amber-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Crown className="w-6 h-6" />
+                <span className="text-sm font-medium">Premium</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="security" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-red-50 dark:data-[state=active]:bg-red-900/20 data-[state=active]:text-red-600 dark:data-[state=active]:text-red-400 data-[state=active]:border-red-200 dark:data-[state=active]:border-red-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Shield className="w-6 h-6" />
+                <span className="text-sm font-medium">Security</span>
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="gallery" className="space-y-6">
-            <Suspense fallback={<div className="text-center py-8">Loading gallery...</div>}>
+            <Suspense fallback={
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
+                  <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Loading Gallery</h3>
+                <p className="text-slate-500 dark:text-slate-400">Preparing your photo collection...</p>
+              </div>
+            }>
               <AIEnhancedPhotoManager
                 photos={photos}
                 onPhotosUpdate={setPhotos}
@@ -613,9 +746,16 @@ export default function Home() {
 
           <TabsContent value="organization" className="space-y-6">
             <PremiumFeature isPremium={!isPremium}>
-              <div className="text-center mb-6">
-                <h2 className="text-3xl font-bold text-gradient mb-2">AI Organization</h2>
-                <p className="text-muted-foreground">Smart tagging and intelligent photo organization</p>
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Brain className="w-10 h-10 text-white" />
+                </div>
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+                  AI Organization
+                </h2>
+                <p className="text-lg text-slate-600 dark:text-slate-400">
+                  Smart tagging and intelligent photo organization powered by advanced AI
+                </p>
               </div>
               <AITaggingModule
                 photos={photos.map(p => ({
@@ -641,9 +781,16 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="ondevice" className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-gradient mb-2">On-Device AI</h2>
-              <p className="text-muted-foreground">Private analysis with GLM 4.5 - no server required</p>
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Cpu className="w-10 h-10 text-white" />
+              </div>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">
+                On-Device AI
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400">
+                Private analysis with GLM 4.5 - no server required, complete privacy
+              </p>
             </div>
             <OnDeviceAnalyzer 
               onAnalysisComplete={(result, confidence) => {
@@ -656,9 +803,16 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="multimodel" className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-gradient mb-2">Multi-Model AI</h2>
-              <p className="text-muted-foreground">Advanced analysis with GLM-4.5V, AIR, and ensemble capabilities</p>
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Network className="w-10 h-10 text-white" />
+              </div>
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-3">
+                Multi-Model AI
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-400">
+                Advanced analysis with GLM-4.5V, AIR, and ensemble capabilities
+              </p>
             </div>
             
             {photos.length > 0 ? (
@@ -681,117 +835,129 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <Card className="premium-card">
-                <CardContent className="p-12 text-center">
-                  <Network className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">No Photos for Analysis</h3>
-                  <p className="text-muted-foreground mb-6">
-                    Upload photos to enable multi-model AI analysis
-                  </p>
-                  <Button onClick={() => {
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-12 text-center">
+                <div className="w-20 h-20 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
+                  <Network className="w-10 h-10 text-slate-400" />
+                </div>
+                <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3">No Photos for Analysis</h3>
+                <p className="text-slate-500 dark:text-slate-400 mb-6">
+                  Upload photos to enable multi-model AI analysis
+                </p>
+                <Button 
+                  onClick={() => {
                     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
                     if (fileInput) fileInput.click();
-                  }} className="premium-button">
-                    <ImageIcon className="w-4 h-4 mr-2" />
-                    Upload Photos
-                  </Button>
-                </CardContent>
-              </Card>
+                  }} 
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <ImageIcon className="w-5 h-5 mr-2" />
+                  Upload Photos
+                </Button>
+              </div>
             )}
           </TabsContent>
 
           <TabsContent value="premium" className="space-y-6">
-            <Card className="premium-card overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-500/10 to-transparent"></div>
-              <CardContent className="p-8 relative z-10">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 shadow-2xl">
+              <div className="absolute inset-0 bg-black/20"></div>
+              <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                <div className="w-full h-full bg-repeat" style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundSize: '80px 80px'
+                }}></div>
+              </div>
+              <div className="relative z-10 p-8 md:p-12">
                 <div className="text-center mb-8">
-                  <div className="w-24 h-24 mx-auto mb-4 gradient-premium rounded-2xl flex items-center justify-center shadow-premium">
-                    <Crown className="w-12 h-12 text-white animate-float" />
+                  <div className="w-24 h-24 mx-auto mb-6 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/30 shadow-2xl">
+                    <Crown className="w-14 h-14 text-white animate-float" />
                   </div>
                   
-                  <h2 className="text-4xl font-bold text-gradient-premium mb-2">Premium Experience</h2>
-                  <p className="text-lg text-muted-foreground mb-6">
-                    Unlock infinite space, intelligent control, and unbreakable security
+                  <h2 className="text-5xl font-bold text-white mb-4">
+                    Premium Experience
+                  </h2>
+                  <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                    Unlock infinite space, intelligent control, and unbreakable security with our premium features
                   </p>
 
                   {isPremium ? (
-                    <div className="space-y-6">
-                      <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border border-green-500/50 rounded-full">
-                        <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="text-green-400 font-semibold">
+                    <div className="space-y-8">
+                      <div className="inline-flex items-center gap-4 px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full">
+                        <CheckCircle className="w-6 h-6 text-emerald-300" />
+                        <span className="text-lg font-semibold text-white">
                           Premium Active - Enjoy All Features
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                         {premiumFeatures.map((feature, index) => (
-                          <div key={index} className="p-4 bg-muted/30 rounded-lg border">
-                            <div className={`w-10 h-10 rounded-lg ${feature.gradient} flex items-center justify-center mb-3`}>
+                          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                            <div className={`w-12 h-12 rounded-xl ${feature.gradient} flex items-center justify-center mb-4 shadow-lg`}>
                               {feature.icon}
                             </div>
-                            <h3 className="font-semibold mb-1">{feature.title}</h3>
-                            <p className="text-sm text-muted-foreground">{feature.description}</p>
+                            <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                            <p className="text-white/80">{feature.description}</p>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       {hasActiveTrial ? (
-                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-yellow-500/20 border border-yellow-500/50 rounded-full">
-                          <Clock className="w-5 h-5 text-yellow-400" />
-                          <span className="text-yellow-400 font-semibold">
+                        <div className="inline-flex items-center gap-4 px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full">
+                          <Clock className="w-6 h-6 text-amber-300" />
+                          <span className="text-lg font-semibold text-white">
                             {trialDaysRemaining} days left in trial
                           </span>
                         </div>
                       ) : (
-                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/20 border border-green-500/50 rounded-full">
-                          <Sparkles className="w-5 h-5 text-green-400" />
-                          <span className="text-green-400 font-semibold">
+                        <div className="inline-flex items-center gap-4 px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full">
+                          <Sparkles className="w-6 h-6 text-emerald-300" />
+                          <span className="text-lg font-semibold text-white">
                             30-day free trial available
                           </span>
                         </div>
                       )}
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                         {premiumFeatures.map((feature, index) => (
-                          <div key={index} className="p-4 bg-muted/30 rounded-lg border hover:shadow-md transition-shadow">
-                            <div className={`w-10 h-10 rounded-lg ${feature.gradient} flex items-center justify-center mb-3`}>
+                          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+                            <div className={`w-12 h-12 rounded-xl ${feature.gradient} flex items-center justify-center mb-4 shadow-lg`}>
                               {feature.icon}
                             </div>
-                            <h3 className="font-semibold mb-1">{feature.title}</h3>
-                            <p className="text-sm text-muted-foreground">{feature.description}</p>
+                            <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                            <p className="text-white/80">{feature.description}</p>
                           </div>
                         ))}
                       </div>
                       
-                      <div className="flex gap-4 justify-center">
+                      <div className="flex gap-6 justify-center">
                         <Button
                           onClick={() => setShowPINPad(true)}
-                          className="premium-button text-lg px-8 py-3"
+                          className="bg-white text-orange-600 hover:bg-white/90 font-bold text-lg py-4 px-10 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl"
                         >
                           {hasActiveTrial ? "Upgrade Now" : "Start Free Trial"}
                         </Button>
                         <Button
                           variant="outline"
                           onClick={() => setShowVault(true)}
-                          className="text-lg px-8 py-3"
+                          className="bg-white/20 text-white border-white/30 hover:bg-white/30 font-bold text-lg py-4 px-10 rounded-2xl transition-all duration-300"
                         >
-                          <Vault className="w-4 h-4 mr-2" />
+                          <Vault className="w-5 h-5 mr-2" />
                           Try Secure Vault
                         </Button>
                       </div>
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
             <SecurityDashboard />
           </TabsContent>
         </Tabs>
+        </div>
       </main>
 
       {/* Enhanced Modals */}
