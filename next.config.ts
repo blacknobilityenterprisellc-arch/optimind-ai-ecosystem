@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Updated configuration to trigger restart
   typescript: {
     ignoreBuildErrors: false,
   },

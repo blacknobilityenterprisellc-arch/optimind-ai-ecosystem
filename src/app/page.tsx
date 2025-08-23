@@ -105,6 +105,9 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("gallery");
   const [isEnhancedUI, setIsEnhancedUI] = useState(true);
   
+  // Force recompilation - updated
+  const [forceUpdate, setForceUpdate] = useState(0);
+  
   const { toast } = useToast();
   const { isPremium, hasActiveTrial, trialDaysRemaining, subscribe, startFreeTrial, usage } = useSecureSubscription();
   const { isOnline: offlineStatus } = useOfflineStorage();
