@@ -18,6 +18,12 @@ import { OnDeviceAnalyzer } from "@/components/OnDeviceAnalyzer";
 import { PINPad } from "@/components/PINPad";
 import { SettingsModal } from "@/components/SettingsModal";
 import { BlockchainStorage } from "@/components/BlockchainStorage";
+import { AIArtGenerator } from "@/components/AIArtGenerator";
+import { AIImageOrganizer } from "@/components/AIImageOrganizer";
+import { AIPremiumEditor } from "@/components/AIPremiumEditor";
+import { AIStyleTransfer } from "@/components/AIStyleTransfer";
+import { AIPhotoRestoration } from "@/components/AIPhotoRestoration";
+import { AIBackgroundGenerator } from "@/components/AIBackgroundGenerator";
 import { PremiumAIServices } from "@/components/PremiumAIServices";
 import { scanMultiplePhotos } from "@/lib/scan-photos";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
@@ -62,7 +68,17 @@ import {
   ThumbsUp,
   AlertCircle,
   Info,
-  Loader2
+  Loader2,
+  Wand2,
+  Palette,
+  Crop,
+  Layers,
+  Eraser,
+  Replace,
+  Magic,
+  Brush,
+  ImageDown,
+  Wrench
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -407,9 +423,9 @@ export default function Home() {
               </div>
               <div className="min-w-0">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent truncate">
-                  PhotoGuard Pro
+                  AI Premium Photo Editor
                 </h1>
-                <p className="text-sm text-slate-500 dark:text-slate-400 truncate">AI-Powered Security & Organization</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 truncate">Advanced AI-powered photo editing & organization suite</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {isPremium && (
@@ -488,10 +504,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                      Upload & Secure
+                      Create & Edit
                     </h2>
                     <p className="text-lg text-white/80">
-                      Advanced AI-powered photo analysis and organization
+                      Professional AI-powered photo editing, generation, and organization
                     </p>
                   </div>
                 </div>
@@ -514,7 +530,7 @@ export default function Home() {
                     ) : (
                       <>
                         <Shield className="w-5 h-5 mr-3" />
-                        Start Scanning
+                        Start Analyzing
                       </>
                     )}
                   </Button>
@@ -534,7 +550,7 @@ export default function Home() {
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                   <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
                     <BarChart3 className="w-6 h-6" />
-                    Analytics Dashboard
+                    AI Studio Dashboard
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-4 mb-6">
@@ -617,7 +633,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-white">
-                        AI Scanning in Progress
+                        AI Analysis in Progress
                       </h3>
                       <p className="text-blue-100 text-sm">
                         Advanced analysis powered by multiple AI models
@@ -686,7 +702,7 @@ export default function Home() {
         {/* Enhanced Navigation Tabs */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-6 gap-2 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 bg-transparent h-auto">
               <TabsTrigger 
                 value="gallery" 
                 className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -729,6 +745,27 @@ export default function Home() {
                 <Shield className="w-6 h-6" />
                 <span className="text-sm font-medium">Security</span>
               </TabsTrigger>
+              <TabsTrigger 
+                value="art-generator" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-50 dark:data-[state=active]:bg-purple-900/20 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-400 data-[state=active]:border-purple-200 dark:data-[state=active]:border-purple-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Wand2 className="w-6 h-6" />
+                <span className="text-sm font-medium">Art Gen</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="style-transfer" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-pink-50 dark:data-[state=active]:bg-pink-900/20 data-[state=active]:text-pink-600 dark:data-[state=active]:text-pink-400 data-[state=active]:border-pink-200 dark:data-[state=active]:border-pink-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Palette className="w-6 h-6" />
+                <span className="text-sm font-medium">Style</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="background" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-indigo-50 dark:data-[state=active]:bg-indigo-900/20 data-[state=active]:text-indigo-600 dark:data-[state=active]:text-indigo-400 data-[state=active]:border-indigo-200 dark:data-[state=active]:border-indigo-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Crop className="w-6 h-6" />
+                <span className="text-sm font-medium">Background</span>
+              </TabsTrigger>
             </TabsList>
 
           <TabsContent value="gallery" className="space-y-6">
@@ -762,6 +799,11 @@ export default function Home() {
                   Smart tagging and intelligent photo organization powered by advanced AI
                 </p>
               </div>
+              <AIImageOrganizer 
+                photos={photos}
+                onPhotosUpdate={setPhotos}
+                isPremium={isPremium}
+              />
               <AITaggingModule
                 photos={photos.map(p => ({
                   ...p,
@@ -982,6 +1024,24 @@ export default function Home() {
                           }}
                         />
                       </div>
+
+                      {/* AI Premium Editor Section */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                          <Wrench className="w-8 h-8" />
+                          Professional Photo Editor
+                        </h3>
+                        <AIPremiumEditor />
+                      </div>
+
+                      {/* AI Photo Restoration Section */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                          <ImageDown className="w-8 h-8" />
+                          Photo Restoration & Enhancement
+                        </h3>
+                        <AIPhotoRestoration />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -991,6 +1051,24 @@ export default function Home() {
 
           <TabsContent value="security" className="space-y-6">
             <SecurityDashboard />
+          </TabsContent>
+
+          <TabsContent value="art-generator" className="space-y-6">
+            <PremiumFeature isPremium={!isPremium}>
+              <AIArtGenerator />
+            </PremiumFeature>
+          </TabsContent>
+
+          <TabsContent value="style-transfer" className="space-y-6">
+            <PremiumFeature isPremium={!isPremium}>
+              <AIStyleTransfer />
+            </PremiumFeature>
+          </TabsContent>
+
+          <TabsContent value="background" className="space-y-6">
+            <PremiumFeature isPremium={!isPremium}>
+              <AIBackgroundGenerator />
+            </PremiumFeature>
           </TabsContent>
         </Tabs>
         </div>
