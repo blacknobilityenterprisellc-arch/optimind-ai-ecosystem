@@ -17,6 +17,8 @@ import { SecurityDashboard } from "@/components/SecurityDashboard";
 import { OnDeviceAnalyzer } from "@/components/OnDeviceAnalyzer";
 import { PINPad } from "@/components/PINPad";
 import { SettingsModal } from "@/components/SettingsModal";
+import { BlockchainStorage } from "@/components/BlockchainStorage";
+import { PremiumAIServices } from "@/components/PremiumAIServices";
 import { scanMultiplePhotos } from "@/lib/scan-photos";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { registerServiceWorker } from "@/lib/cache";
@@ -948,6 +950,37 @@ export default function Home() {
                           <Vault className="w-5 h-5 mr-2" />
                           Try Secure Vault
                         </Button>
+                      </div>
+                      
+                      {/* Blockchain Storage Section */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                          <Database className="w-8 h-8" />
+                          Blockchain Storage
+                        </h3>
+                        <BlockchainStorage 
+                          photoId={photos.length > 0 ? photos[0]?.id : undefined}
+                          file={photos.length > 0 ? photos[0]?.file : undefined}
+                          onStorageComplete={(result) => {
+                            if (result.success) {
+                              console.log('Photo stored as NFT:', result.transactionHash);
+                            }
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Premium AI Services Section */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                          <Brain className="w-8 h-8" />
+                          Advanced AI Services
+                        </h3>
+                        <PremiumAIServices 
+                          photos={photos.map(p => ({ id: p.id, file: p.file!, url: p.url }))}
+                          onProcessingComplete={(results) => {
+                            console.log('AI processing completed:', results);
+                          }}
+                        />
                       </div>
                     </div>
                   )}
