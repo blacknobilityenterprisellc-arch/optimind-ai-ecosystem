@@ -13,7 +13,8 @@ import { AITaggingModule } from "@/components/AITaggingModule";
 import { PremiumBadge, PremiumButton, PremiumFeature } from "@/components/PremiumBadge";
 import { AIEnhancedPhotoManager } from "@/components/AIEnhancedPhotoManager";
 import { MultiModelAIAnalyzer } from "@/components/MultiModelAIAnalyzer";
-import { SecurityDashboard } from "@/components/SecurityDashboard";
+import { EnterpriseSecurityDashboard } from "@/components/EnterpriseSecurityDashboard";
+import { FamilySafetyControls } from "@/components/FamilySafetyControls";
 import { OnDeviceAnalyzer } from "@/components/OnDeviceAnalyzer";
 import { PINPad } from "@/components/PINPad";
 import { SettingsModal } from "@/components/SettingsModal";
@@ -78,7 +79,8 @@ import {
   Magic,
   Brush,
   ImageDown,
-  Wrench
+  Wrench,
+  CreditCard
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -702,7 +704,7 @@ export default function Home() {
         {/* Enhanced Navigation Tabs */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-2">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-2 bg-transparent h-auto">
               <TabsTrigger 
                 value="gallery" 
                 className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -765,6 +767,20 @@ export default function Home() {
               >
                 <Crop className="w-6 h-6" />
                 <span className="text-sm font-medium">Background</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="enterprise-security" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-emerald-50 dark:data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-200 dark:data-[state=active]:border-emerald-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <ShieldCheck className="w-6 h-6" />
+                <span className="text-sm font-medium">Enterprise</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="family-safety" 
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-cyan-50 dark:data-[state=active]:bg-cyan-900/20 data-[state=active]:text-cyan-600 dark:data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-200 dark:data-[state=active]:border-cyan-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              >
+                <Users className="w-6 h-6" />
+                <span className="text-sm font-medium">Family</span>
               </TabsTrigger>
             </TabsList>
 
@@ -1050,7 +1066,9 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
-            <SecurityDashboard />
+            <PremiumFeature isPremium={!isPremium}>
+              <EnterpriseSecurityDashboard />
+            </PremiumFeature>
           </TabsContent>
 
           <TabsContent value="art-generator" className="space-y-6">
@@ -1068,6 +1086,18 @@ export default function Home() {
           <TabsContent value="background" className="space-y-6">
             <PremiumFeature isPremium={!isPremium}>
               <AIBackgroundGenerator />
+            </PremiumFeature>
+          </TabsContent>
+
+          <TabsContent value="enterprise-security" className="space-y-6">
+            <PremiumFeature isPremium={!isPremium}>
+              <EnterpriseSecurityDashboard />
+            </PremiumFeature>
+          </TabsContent>
+
+          <TabsContent value="family-safety" className="space-y-6">
+            <PremiumFeature isPremium={!isPremium}>
+              <FamilySafetyControls />
             </PremiumFeature>
           </TabsContent>
         </Tabs>
