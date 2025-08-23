@@ -1,0 +1,122 @@
+
+> nextjs_tailwind_shadcn_ts@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, using available port 3001 instead.
+   ▲ Next.js 15.3.5
+   - Local:        http://localhost:3001
+   - Network:      http://21.0.1.203:3001
+   - Environments: .env
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+ ✓ Starting...
+ ✓ Ready in 1879ms
+ ○ Compiling /test-moderation ...
+ ✓ Compiled /test-moderation in 5.7s (814 modules)
+ GET /test-moderation 200 in 6233ms
+ ○ Compiling /api/moderation ...
+ ⨯ ./src/services/zaiClient.ts:2:1
+Module not found: Can't resolve 'node-fetch'
+  1 | // src/services/zaiClient.ts
+> 2 | import fetch from 'node-fetch'; // optional: in Node18+ global fetch exists; keep for compatibility
+    | ^
+  3 | import AbortController from 'abort-controller';
+  4 |
+  5 | export interface ZaiClientConfig {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/services/zaiIntegration.ts
+./src/app/api/moderation/route.ts
+ ⨯ ./src/services/zaiClient.ts:2:1
+Module not found: Can't resolve 'node-fetch'
+  1 | // src/services/zaiClient.ts
+> 2 | import fetch from 'node-fetch'; // optional: in Node18+ global fetch exists; keep for compatibility
+    | ^
+  3 | import AbortController from 'abort-controller';
+  4 |
+  5 | export interface ZaiClientConfig {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/services/zaiIntegration.ts
+./src/app/api/moderation/route.ts
+ ⨯ ./src/services/zaiClient.ts:2:1
+Module not found: Can't resolve 'node-fetch'
+  1 | // src/services/zaiClient.ts
+> 2 | import fetch from 'node-fetch'; // optional: in Node18+ global fetch exists; keep for compatibility
+    | ^
+  3 | import AbortController from 'abort-controller';
+  4 |
+  5 | export interface ZaiClientConfig {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/services/zaiIntegration.ts
+./src/app/api/moderation/route.ts
+Time 5.583301
+ GET /api/moderation 500 in 7071ms
+ ✓ Compiled /_error in 171ms (609 modules)
+ ✓ Compiled in 153ms (609 modules)
+ ✓ Compiled in 1724ms (1276 modules)
+ ✓ Compiled in 81ms (609 modules)
+ ⨯ TypeError: Cannot read properties of undefined (reading 'code')
+    at eval (src/services/zaiAir.ts:21:11)
+    at <unknown> (rsc)/./src/services/zaiAir.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:109:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(rsc)/./src/services/zaiIntegration.ts:8:65)
+    at <unknown> (rsc)/./src/services/zaiIntegration.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:131:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(rsc)/./src/app/api/moderation/route.ts:7:82)
+    at <unknown> (rsc)/./src/app/api/moderation/route.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:43:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at __webpack_exec__ (.next/server/app/api/moderation/route.js:316:39)
+    at <unknown> (.next/server/app/api/moderation/route.js:317:475)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:168:21)
+    at <unknown> (.next/server/app/api/moderation/route.js:317:47)
+    at Object.<anonymous> (.next/server/app/api/moderation/route.js:320:3)
+  19 | import { ModelResult, ModelLabel } from '../types/index';
+  20 |
+> 21 | addFormats(Ajv);
+     |           ^
+  22 |
+  23 | const ajv = new Ajv({ strict: false });
+  24 | {
+  page: '/api/moderation'
+}
+Time 1.782307
+ GET /api/moderation 500 in 652ms
+ ⨯ TypeError: Cannot read properties of undefined (reading 'code')
+    at eval (src/services/zaiAir.ts:21:11)
+    at <unknown> (rsc)/./src/services/zaiAir.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:109:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(rsc)/./src/services/zaiIntegration.ts:8:65)
+    at <unknown> (rsc)/./src/services/zaiIntegration.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:131:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(rsc)/./src/app/api/moderation/route.ts:7:82)
+    at <unknown> (rsc)/./src/app/api/moderation/route.ts (/home/z/my-project/.next/server/app/api/moderation/route.js:43:1)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at __webpack_exec__ (.next/server/app/api/moderation/route.js:316:39)
+    at <unknown> (.next/server/app/api/moderation/route.js:317:475)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:168:21)
+    at <unknown> (.next/server/app/api/moderation/route.js:317:47)
+    at Object.<anonymous> (.next/server/app/api/moderation/route.js:320:3)
+  19 | import { ModelResult, ModelLabel } from '../types/index';
+  20 |
+> 21 | addFormats(Ajv);
+     |           ^
+  22 |
+  23 | const ajv = new Ajv({ strict: false });
+  24 | {
+  page: '/api/moderation'
+}
+Time 1.070427
+ GET /api/moderation 500 in 249ms
+ ✓ Compiled in 796ms (1276 modules)
+ GET /api/moderation 200 in 186ms
