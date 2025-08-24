@@ -23,7 +23,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 
-interface FilterState {
+export interface FilterState {
   search: string;
   status: string[];
   categories: string[];

@@ -84,8 +84,8 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
     const startTime = performance.now();
 
     try {
-      const module = await importFn();
-      setComponent(() => module.default);
+      const importedModule = await importFn();
+      setComponent(() => importedModule.default);
       
       // Track performance metrics
       const loadTime = performance.now() - startTime;

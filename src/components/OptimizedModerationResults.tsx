@@ -12,7 +12,7 @@ import {
   useDebounce,
   useThrottle,
   useVirtualScroll
-} from '@/lib/performance-optimization';
+} from '@/lib/performance-optimization.tsx';
 import { 
   Eye, 
   Download, 

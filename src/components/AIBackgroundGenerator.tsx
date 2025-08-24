@@ -36,7 +36,6 @@ import {
   Grid,
   List,
   Filter,
-  Magic,
   Eraser,
   Replace,
   Save,
@@ -58,7 +57,7 @@ interface BackgroundPreset {
   category: string;
 }
 
-export default function AIBackgroundGenerator() {
+export function AIBackgroundGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [isReplacingBackground, setIsReplacingBackground] = useState(false);
@@ -91,7 +90,7 @@ export default function AIBackgroundGenerator() {
     { value: 'nature', label: 'Nature', icon: <Filter className="w-4 h-4" /> },
     { value: 'urban', label: 'Urban', icon: <Crop className="w-4 h-4" /> },
     { value: 'tech', label: 'Tech', icon: <Zap className="w-4 h-4" /> },
-    { value: 'fantasy', label: 'Fantasy', icon: <Magic className="w-4 h-4" /> }
+    { value: 'fantasy', label: 'Fantasy', icon: <Sparkles className="w-4 h-4" /> }
   ];
 
   const resolutionOptions = [
@@ -293,10 +292,7 @@ export default function AIBackgroundGenerator() {
         </div>
         <div className="flex items-center gap-3">
           <PremiumFeature>
-            <PremiumBadge className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              Pro Feature
-            </PremiumBadge>
+            <PremiumBadge text="PRO" />
           </PremiumFeature>
           <Button
             variant="outline"
@@ -350,7 +346,7 @@ export default function AIBackgroundGenerator() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Style</label>
-                    <Select value={style} onValueChange={(value: BackgroundGenerationOptions['style']) => setStyle(value)}>
+                    <Select value={style} onValueChange={(value: string) => setStyle(value as BackgroundGenerationOptions['style'])}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -369,7 +365,7 @@ export default function AIBackgroundGenerator() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Resolution</label>
-                    <Select value={resolution} onValueChange={(value: BackgroundGenerationOptions['resolution']) => setResolution(value)}>
+                    <Select value={resolution} onValueChange={(value: string) => setResolution(value as BackgroundGenerationOptions['resolution'])}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -385,7 +381,7 @@ export default function AIBackgroundGenerator() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Quality</label>
-                    <Select value={quality} onValueChange={(value: BackgroundGenerationOptions['quality']) => setQuality(value)}>
+                    <Select value={quality} onValueChange={(value: string) => setQuality(value as BackgroundGenerationOptions['quality'])}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -401,7 +397,7 @@ export default function AIBackgroundGenerator() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Mood</label>
-                    <Select value={mood} onValueChange={(value: BackgroundGenerationOptions['mood']) => setMood(value)}>
+                    <Select value={mood} onValueChange={(value: string) => setMood(value as BackgroundGenerationOptions['mood'])}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -417,7 +413,7 @@ export default function AIBackgroundGenerator() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Composition</label>
-                    <Select value={composition} onValueChange={(value: BackgroundGenerationOptions['composition']) => setComposition(value)}>
+                    <Select value={composition} onValueChange={(value: string) => setComposition(value as BackgroundGenerationOptions['composition'])}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -578,7 +574,7 @@ export default function AIBackgroundGenerator() {
               <CardContent>
                 <DropZone
                   onFilesAdded={handleImageUpload}
-                  acceptedTypes="image/*"
+                  acceptedTypes={["image/*"]}
                   maxFiles={1}
                   className="min-h-[300px]"
                 />
@@ -692,7 +688,7 @@ export default function AIBackgroundGenerator() {
               <CardContent>
                 <DropZone
                   onFilesAdded={handleImageUpload}
-                  acceptedTypes="image/*"
+                  acceptedTypes={["image/*"]}
                   maxFiles={1}
                   className="min-h-[200px]"
                 />

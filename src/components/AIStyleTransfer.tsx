@@ -12,10 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { 
-  useSecureSubscription,
-  useAIStyleTransfer 
-} from "@/lib/ai-style-transfer";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+import { useAIStyleTransfer } from "@/lib/ai-style-transfer";
 import { 
   Palette, 
   Sparkles, 
@@ -37,7 +35,6 @@ import {
   Filter,
   Sliders,
   Brush,
-  Artwork,
   Camera,
   Upload,
   Zap,
@@ -69,13 +66,7 @@ import {
   Maximize as MaximizeIcon,
   Minimize as MinimizeIcon,
   Waves,
-  PencilSketch,
-  Noir,
-  Vintage,
-  PopArt,
-  ArtNouveau,
-  Baroque,
-  Renaissance,
+  Edit,
   Split,
   Merge,
   Clone,
@@ -997,7 +988,7 @@ export function AIStyleTransfer() {
       description: "Cubist style with geometric shapes",
       category: "classic",
       preview: "🔷",
-      icon: <Artwork className="w-5 h-5" />,
+      icon: <Brush className="w-5 h-5" />,
       credits: 85,
       isPremium: true,
       artist: "Pablo Picasso",
@@ -1073,7 +1064,7 @@ export function AIStyleTransfer() {
       description: "Hand-drawn pencil sketch effect",
       category: "classic",
       preview: "✏️",
-      icon: <PencilSketch className="w-5 h-5" />,
+      icon: <Edit className="w-5 h-5" />,
       credits: 55,
       isPremium: false
     },
@@ -1103,7 +1094,7 @@ export function AIStyleTransfer() {
       description: "Black and white dramatic style",
       category: "photography",
       preview: "🎬",
-      icon: <Noir className="w-5 h-5" />,
+      icon: <Moon className="w-5 h-5" />,
       credits: 45,
       isPremium: false
     },
@@ -1113,7 +1104,7 @@ export function AIStyleTransfer() {
       description: "Aged vintage photograph effect",
       category: "photography",
       preview: "📸",
-      icon: <Vintage className="w-5 h-5" />,
+      icon: <Sun className="w-5 h-5" />,
       credits: 40,
       isPremium: false
     },
@@ -1123,7 +1114,7 @@ export function AIStyleTransfer() {
       description: "Colorful pop art style",
       category: "modern",
       preview: "🎨",
-      icon: <PopArt className="w-5 h-5" />,
+      icon: <Star className="w-5 h-5" />,
       credits: 75,
       isPremium: true
     },
@@ -1133,7 +1124,7 @@ export function AIStyleTransfer() {
       description: "Elegant decorative art style",
       category: "classic",
       preview: "🌿",
-      icon: <ArtNouveau className="w-5 h-5" />,
+      icon: <Waves className="w-5 h-5" />,
       credits: 85,
       isPremium: true
     },
@@ -1143,7 +1134,7 @@ export function AIStyleTransfer() {
       description: "Ornate and dramatic art style",
       category: "classic",
       preview: "🏛️",
-      icon: <Baroque className="w-5 h-5" />,
+      icon: <Crown className="w-5 h-5" />,
       credits: 90,
       isPremium: true
     },
@@ -1153,7 +1144,7 @@ export function AIStyleTransfer() {
       description: "Classical Renaissance art style",
       category: "classic",
       preview: "🏰",
-      icon: <Renaissance className="w-5 h-5" />,
+      icon: <Brush className="w-5 h-5" />,
       credits: 100,
       isPremium: true
     }
@@ -1288,7 +1279,7 @@ export function AIStyleTransfer() {
                 <div className="text-xs font-medium">Van Gogh</div>
               </div>
               <div className="text-center">
-                <Artwork className="w-8 h-8 mx-auto text-blue-500 mb-2" />
+                <Brush className="w-8 h-8 mx-auto text-blue-500 mb-2" />
                 <div className="text-xs font-medium">Picasso</div>
               </div>
               <div className="text-center">

@@ -40,7 +40,6 @@ Camera,
   Plane,
   Home,
   Work,
-  Celebration,
   Nature,
   City,
   Beach,
@@ -440,7 +439,7 @@ export function AIImageOrganizer() {
 
   const getAlbumIcon = (category: Album['category']) => {
     switch (category) {
-      case "event": return <Celebration className="w-5 h-5" />;
+      case "event": return <Calendar className="w-5 h-5" />;
       case "people": return <Users className="w-5 h-5" />;
       case "location": return <MapPin className="w-5 h-5" />;
       case "time": return <Clock className="w-5 h-5" />;

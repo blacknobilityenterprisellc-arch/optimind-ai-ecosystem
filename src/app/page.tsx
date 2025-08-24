@@ -56,7 +56,6 @@ import {
   Eye,
   Filter,
   Search,
-  TrendingUp,
   Users,
   Star,
   Award,
@@ -80,15 +79,11 @@ import {
   Layers,
   Eraser,
   Replace,
-  Magic,
   Brush,
   ImageDown,
   Wrench,
   CreditCard,
-  BarChart3,
   Activity,
-  TrendingUp,
-  Filter,
   Download,
   RefreshCw,
   Accessibility
@@ -420,37 +415,83 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Enhanced Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 animate-gradient-x">
+      {/* Animated Background Particles */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Floating gradient orbs */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={`orb-${i}`}
+            className="absolute rounded-full bg-gradient-to-br from-blue-400/10 via-purple-400/10 to-pink-400/10 blur-xl animate-float"
+            style={{
+              width: `${100 + Math.random() * 200}px`,
+              height: `${100 + Math.random() * 200}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 10}s`,
+              animationDuration: `${20 + Math.random() * 10}s`,
+              filter: 'blur(40px)'
+            }}
+          ></div>
+        ))}
+        
+        {/* Small floating particles */}
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${5 + Math.random() * 5}s`,
+              opacity: Math.random() * 0.5 + 0.2
+            }}
+          ></div>
+        ))}
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="w-full h-full bg-repeat" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: '40px 40px',
+            animation: 'patternFloat 30s linear infinite'
+          }}></div>
+        </div>
+      </div>
+      {/* Premium Header with Glass Morphism */}
+      <header className="sticky top-0 z-50 glass-effect-dark shadow-lg border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 flex-wrap min-w-0 flex-1">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg">
-                  <Shield className="w-6 h-6 text-white" />
+              <div className="relative group">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-premium transform group-hover:scale-110 transition-all duration-300 group-hover:shadow-glow">
+                  <Shield className="w-7 h-7 text-white animate-pulse-slow" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 shadow-sm">
-                  <div className="w-full h-full bg-emerald-500 rounded-full animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 shadow-sm animate-pulse">
+                  <div className="w-full h-full bg-emerald-500 rounded-full animate-ping"></div>
                 </div>
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border border-white dark:border-slate-900 opacity-75"></div>
               </div>
               <div className="min-w-0">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent truncate">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent truncate animate-fade-in">
                   AI Premium Photo Editor
                 </h1>
-                <p className="text-sm text-slate-500 dark:text-slate-400 truncate">Advanced AI-powered photo editing & organization suite</p>
+                <p className="text-sm text-slate-400 truncate animate-slide-up">
+                  Advanced AI-powered photo editing & organization suite
+                </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {isPremium && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow-sm">
-                    <Crown className="w-3.5 h-3.5 text-white" />
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full shadow-premium animate-float">
+                    <Crown className="w-3.5 h-3.5 text-white animate-pulse" />
                     <span className="text-xs font-semibold text-white">PRO</span>
                   </div>
                 )}
                 {hasActiveTrial && (
-                  <div className="flex items-center gap-1 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-full">
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                  <div className="flex items-center gap-1 px-2.5 py-1 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-full animate-pulse-slow">
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-emerald-300">
                       {trialDaysRemaining}d trial
                     </span>
                   </div>
@@ -458,19 +499,19 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <HighContrastToggle className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" />
-              <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+              <HighContrastToggle className="p-2.5 h-10 w-10 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-all duration-300 transform hover:scale-105" />
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
                 {isOnline ? (
                   <>
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                    <Wifi className="w-4 h-4 text-emerald-600" />
-                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Online</span>
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <Wifi className="w-4 h-4 text-emerald-400" />
+                    <span className="text-xs font-medium text-emerald-300">Online</span>
                   </>
                 ) : (
                   <>
-                    <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <WifiOff className="w-4 h-4 text-slate-400" />
-                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Offline</span>
+                    <div className="w-2 h-2 bg-slate-500 rounded-full"></div>
+                    <WifiOff className="w-4 h-4 text-slate-500" />
+                    <span className="text-xs font-medium text-slate-400">Offline</span>
                   </>
                 )}
               </div>
@@ -478,7 +519,7 @@ export default function Home() {
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowVault(true)}
-                className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                className="p-2.5 h-10 w-10 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
                 aria-label="Open vault"
               >
                 <Vault className="w-5 h-5" />
@@ -487,7 +528,7 @@ export default function Home() {
                 variant="ghost" 
                 size="sm"
                 onClick={() => setShowSettings(true)}
-                className="p-2.5 h-10 w-10 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                className="p-2.5 h-10 w-10 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
                 aria-label="Settings"
               >
                 <Settings className="w-5 h-5" />
@@ -498,34 +539,50 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Enhanced Hero Section */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-900 shadow-2xl">
+        {/* Premium Hero Section with Advanced Effects */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-900 shadow-2xl transform hover:scale-[1.01] transition-all duration-500">
+          {/* Animated Background Pattern */}
           <div className="absolute inset-0 bg-black/20"></div>
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 animate-pulse-slow">
             <div className="w-full h-full bg-repeat" style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               backgroundSize: '60px 60px'
             }}></div>
           </div>
+          {/* Floating Particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-white/20 rounded-full animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${3 + Math.random() * 2}s`
+                }}
+              ></div>
+            ))}
+          </div>
           <div className="relative z-10 p-8 md:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Upload Section */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 animate-slide-up">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                    <ImageIcon className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 transform hover:scale-110 transition-all duration-300 shadow-premium">
+                    <ImageIcon className="w-8 h-8 text-white animate-pulse-slow" />
                   </div>
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                       Create & Edit
                     </h2>
-                    <p className="text-lg text-white/80">
+                    <p className="text-lg text-white/80 animate-fade-in">
                       Professional AI-powered photo editing, generation, and organization
                     </p>
                   </div>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-[1.02] shadow-premium">
                   <DropZone onFilesAdded={handleFilesAdded} />
                 </div>
                 
@@ -533,7 +590,7 @@ export default function Home() {
                   <Button 
                     onClick={startScanning}
                     disabled={isScanning || photos.filter(p => p.status === "pending").length === 0}
-                    className="flex-1 bg-white text-blue-600 hover:bg-white/90 font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="flex-1 premium-button text-lg font-semibold py-3 px-6 rounded-xl shadow-premium disabled:opacity-50 disabled:transform-none"
                   >
                     {isScanning ? (
                       <>
@@ -550,7 +607,7 @@ export default function Home() {
                   <Button 
                     variant="outline"
                     onClick={() => setShowVault(true)}
-                    className="flex-1 bg-white/10 text-white border-white/30 hover:bg-white/20 font-semibold py-3 px-6 rounded-xl transition-all duration-300"
+                    className="flex-1 bg-white/10 text-white border-white/30 hover:bg-white/20 font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
                   >
                     <Vault className="w-5 h-5 mr-3" />
                     Secure Vault
@@ -559,34 +616,34 @@ export default function Home() {
               </div>
 
               {/* Analytics Dashboard */}
-              <div className="space-y-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="space-y-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-[1.02] shadow-premium">
                   <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <BarChart3 className="w-6 h-6" />
+                    <BarChart3 className="w-6 h-6 animate-pulse-slow" />
                     AI Studio Dashboard
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                      <div className="text-3xl font-bold text-white mb-1">
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                      <div className="text-3xl font-bold text-white mb-1 animate-scale-in">
                         {analyticsData.totalPhotos}
                       </div>
                       <div className="text-sm text-white/70">Total Photos</div>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                      <div className="text-3xl font-bold text-emerald-300 mb-1">
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                      <div className="text-3xl font-bold text-emerald-300 mb-1 animate-scale-in" style={{ animationDelay: '0.1s' }}>
                         {analyticsData.safePhotos}
                       </div>
                       <div className="text-sm text-white/70">Safe</div>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                      <div className="text-3xl font-bold text-red-300 mb-1">
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                      <div className="text-3xl font-bold text-red-300 mb-1 animate-scale-in" style={{ animationDelay: '0.2s' }}>
                         {analyticsData.flaggedPhotos}
                       </div>
                       <div className="text-sm text-white/70">Flagged</div>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                      <div className="text-3xl font-bold text-blue-300 mb-1">
+                    <div className="bg-white/10 rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                      <div className="text-3xl font-bold text-blue-300 mb-1 animate-scale-in" style={{ animationDelay: '0.3s' }}>
                         {Math.round(analyticsData.safetyRate)}%
                       </div>
                       <div className="text-sm text-white/70">Safety Rate</div>
@@ -600,9 +657,9 @@ export default function Home() {
                         <span>Storage Used</span>
                         <span>{formatFileSize(usage.storageUsed)} / {formatFileSize(usage.storageLimit)}</span>
                       </div>
-                      <div className="w-full bg-white/20 rounded-full h-3">
+                      <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
                         <div 
-                          className="bg-gradient-to-r from-blue-400 to-indigo-400 h-3 rounded-full transition-all duration-300"
+                          className="bg-gradient-to-r from-blue-400 to-indigo-400 h-3 rounded-full transition-all duration-500 ease-out shadow-glow"
                           style={{ width: `${getUsagePercentage(usage.storageUsed, usage.storageLimit)}%` }}
                         ></div>
                       </div>
@@ -613,9 +670,9 @@ export default function Home() {
                         <span>Scans Used</span>
                         <span>{usage.photosScanned} / {usage.scanLimit}</span>
                       </div>
-                      <div className="w-full bg-white/20 rounded-full h-3">
+                      <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
                         <div 
-                          className="bg-gradient-to-r from-emerald-400 to-green-400 h-3 rounded-full transition-all duration-300"
+                          className="bg-gradient-to-r from-emerald-400 to-green-400 h-3 rounded-full transition-all duration-500 ease-out shadow-glow"
                           style={{ width: `${getUsagePercentage(usage.photosScanned, usage.scanLimit)}%` }}
                         ></div>
                       </div>
@@ -627,33 +684,49 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Enhanced Scanning Progress */}
+        {/* Premium Scanning Progress */}
         {isScanning && (
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 shadow-xl">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 shadow-2xl animate-slide-up">
+            {/* Animated Background */}
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute top-0 left-0 w-full h-full opacity-10">
-              <div className="w-full h-full bg-repeat" style={{
+              <div className="w-full h-full bg-repeat animate-pulse-slow" style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                 backgroundSize: '40px 40px'
               }}></div>
+            </div>
+            {/* Scanning Particles */}
+            <div className="absolute inset-0 overflow-hidden">
+              {[...Array(15)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    animationDuration: `${2 + Math.random() * 1}s`
+                  }}
+                ></div>
+              ))}
             </div>
             <div className="relative z-10 p-8">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                      <Shield className="w-6 h-6 text-white animate-pulse" />
+                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-premium animate-pulse">
+                      <Shield className="w-6 h-6 text-white animate-pulse-slow" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-white">
+                      <h3 className="text-xl font-semibold text-white animate-fade-in">
                         AI Analysis in Progress
                       </h3>
-                      <p className="text-blue-100 text-sm">
+                      <p className="text-blue-100 text-sm animate-slide-up">
                         Advanced analysis powered by multiple AI models
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right animate-scale-in">
                     <div className="text-3xl font-bold text-white mb-1">
                       {Math.round(scanProgress)}%
                     </div>
@@ -661,17 +734,17 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div className="w-full bg-white/20 rounded-full h-4">
+                <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm">
                   <div 
-                    className="bg-gradient-to-r from-emerald-400 to-green-400 h-4 rounded-full transition-all duration-500 ease-out shadow-lg"
+                    className="bg-gradient-to-r from-emerald-400 to-green-400 h-4 rounded-full transition-all duration-500 ease-out shadow-glow animate-pulse-slow"
                     style={{ width: `${scanProgress}%` }}
                   ></div>
                 </div>
                 
                 {currentScanningPhoto && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-[1.02] shadow-premium animate-fade-in">
                     <p className="text-white flex items-center gap-3">
-                      <Eye className="w-5 h-5 text-blue-200" />
+                      <Eye className="w-5 h-5 text-blue-200 animate-pulse" />
                       <span className="font-medium">Currently analyzing:</span>
                       <span className="text-blue-100 truncate">{currentScanningPhoto}</span>
                     </p>
@@ -679,27 +752,27 @@ export default function Home() {
                 )}
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105 shadow-premium animate-slide-up" style={{ animationDelay: '0.1s' }}>
                     <div className="flex items-center gap-3">
-                      <Brain className="w-6 h-6 text-blue-200" />
+                      <Brain className="w-6 h-6 text-blue-200 animate-pulse-slow" />
                       <div>
                         <div className="text-sm font-medium text-white">AI Content Analysis</div>
                         <div className="text-xs text-blue-100">Deep learning models</div>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105 shadow-premium animate-slide-up" style={{ animationDelay: '0.2s' }}>
                     <div className="flex items-center gap-3">
-                      <Shield className="w-6 h-6 text-emerald-200" />
+                      <Shield className="w-6 h-6 text-emerald-200 animate-pulse-slow" />
                       <div>
                         <div className="text-sm font-medium text-white">Privacy Detection</div>
                         <div className="text-xs text-blue-100">Advanced security</div>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105 shadow-premium animate-slide-up" style={{ animationDelay: '0.3s' }}>
                     <div className="flex items-center gap-3">
-                      <Zap className="w-6 h-6 text-yellow-200" />
+                      <Zap className="w-6 h-6 text-yellow-200 animate-pulse-slow" />
                       <div>
                         <div className="text-sm font-medium text-white">Real-time Processing</div>
                         <div className="text-xs text-blue-100">Instant results</div>
@@ -712,111 +785,111 @@ export default function Home() {
           </div>
         )}
 
-        {/* Enhanced Navigation Tabs */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-2">
+        {/* Premium Navigation Tabs */}
+        <div className="glass-effect dark:glass-effect-dark rounded-2xl shadow-xl border border-white/20 dark:border-white/10 p-3 animate-fade-in">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-14 gap-2 bg-transparent h-auto">
               <TabsTrigger 
                 value="analytics" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-500/20 dark:data-[state=active]:bg-blue-500/30 data-[state=active]:text-blue-400 dark:data-[state=active]:text-blue-300 data-[state=active]:border-blue-400/50 dark:data-[state=active]:border-blue-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <BarChart3 className="w-5 h-5" />
                 <span className="text-xs font-medium">Analytics</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="accessibility" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-500/20 dark:data-[state=active]:bg-blue-500/30 data-[state=active]:text-blue-400 dark:data-[state=active]:text-blue-300 data-[state=active]:border-blue-400/50 dark:data-[state=active]:border-blue-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Accessibility className="w-5 h-5" />
                 <span className="text-xs font-medium">A11y</span>
               </TabsTrigger>
             <TabsTrigger 
                 value="performance" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-500/20 dark:data-[state=active]:bg-blue-500/30 data-[state=active]:text-blue-400 dark:data-[state=active]:text-blue-300 data-[state=active]:border-blue-400/50 dark:data-[state=active]:border-blue-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Zap className="w-5 h-5" />
                 <span className="text-xs font-medium">Performance</span>
               </TabsTrigger>
             <TabsTrigger 
                 value="batch" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-500/20 dark:data-[state=active]:bg-blue-500/30 data-[state=active]:text-blue-400 dark:data-[state=active]:text-blue-300 data-[state=active]:border-blue-400/50 dark:data-[state=active]:border-blue-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Activity className="w-5 h-5" />
                 <span className="text-xs font-medium">Batch</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="gallery" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-50 dark:data-[state=active]:bg-blue-900/20 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:border-blue-200 dark:data-[state=active]:border-blue-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-blue-500/20 dark:data-[state=active]:bg-blue-500/30 data-[state=active]:text-blue-400 dark:data-[state=active]:text-blue-300 data-[state=active]:border-blue-400/50 dark:data-[state=active]:border-blue-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <ImageIcon className="w-6 h-6" />
                 <span className="text-sm font-medium">Gallery</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="organization" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-50 dark:data-[state=active]:bg-purple-900/20 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-400 data-[state=active]:border-purple-200 dark:data-[state=active]:border-purple-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-500/20 dark:data-[state=active]:bg-purple-500/30 data-[state=active]:text-purple-400 dark:data-[state=active]:text-purple-300 data-[state=active]:border-purple-400/50 dark:data-[state=active]:border-purple-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Brain className="w-6 h-6" />
                 <span className="text-sm font-medium">AI Org</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="ondevice" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-green-50 dark:data-[state=active]:bg-green-900/20 data-[state=active]:text-green-600 dark:data-[state=active]:text-green-400 data-[state=active]:border-green-200 dark:data-[state=active]:border-green-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-green-500/20 dark:data-[state=active]:bg-green-500/30 data-[state=active]:text-green-400 dark:data-[state=active]:text-green-300 data-[state=active]:border-green-400/50 dark:data-[state=active]:border-green-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Cpu className="w-6 h-6" />
                 <span className="text-sm font-medium">On-Device</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="multimodel" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-orange-50 dark:data-[state=active]:bg-orange-900/20 data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-400 data-[state=active]:border-orange-200 dark:data-[state=active]:border-orange-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-orange-500/20 dark:data-[state=active]:bg-orange-500/30 data-[state=active]:text-orange-400 dark:data-[state=active]:text-orange-300 data-[state=active]:border-orange-400/50 dark:data-[state=active]:border-orange-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Network className="w-6 h-6" />
                 <span className="text-sm font-medium">Multi-Model</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="premium" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-amber-50 dark:data-[state=active]:bg-amber-900/20 data-[state=active]:text-amber-600 dark:data-[state=active]:text-amber-400 data-[state=active]:border-amber-200 dark:data-[state=active]:border-amber-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-amber-500/20 dark:data-[state=active]:bg-amber-500/30 data-[state=active]:text-amber-400 dark:data-[state=active]:text-amber-300 data-[state=active]:border-amber-400/50 dark:data-[state=active]:border-amber-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Crown className="w-6 h-6" />
                 <span className="text-sm font-medium">Premium</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="security" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-red-50 dark:data-[state=active]:bg-red-900/20 data-[state=active]:text-red-600 dark:data-[state=active]:text-red-400 data-[state=active]:border-red-200 dark:data-[state=active]:border-red-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-red-500/20 dark:data-[state=active]:bg-red-500/30 data-[state=active]:text-red-400 dark:data-[state=active]:text-red-300 data-[state=active]:border-red-400/50 dark:data-[state=active]:border-red-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Shield className="w-6 h-6" />
                 <span className="text-sm font-medium">Security</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="art-generator" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-50 dark:data-[state=active]:bg-purple-900/20 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-400 data-[state=active]:border-purple-200 dark:data-[state=active]:border-purple-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-purple-500/20 dark:data-[state=active]:bg-purple-500/30 data-[state=active]:text-purple-400 dark:data-[state=active]:text-purple-300 data-[state=active]:border-purple-400/50 dark:data-[state=active]:border-purple-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Wand2 className="w-6 h-6" />
                 <span className="text-sm font-medium">Art Gen</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="style-transfer" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-pink-50 dark:data-[state=active]:bg-pink-900/20 data-[state=active]:text-pink-600 dark:data-[state=active]:text-pink-400 data-[state=active]:border-pink-200 dark:data-[state=active]:border-pink-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-pink-500/20 dark:data-[state=active]:bg-pink-500/30 data-[state=active]:text-pink-400 dark:data-[state=active]:text-pink-300 data-[state=active]:border-pink-400/50 dark:data-[state=active]:border-pink-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Palette className="w-6 h-6" />
                 <span className="text-sm font-medium">Style</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="background" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-indigo-50 dark:data-[state=active]:bg-indigo-900/20 data-[state=active]:text-indigo-600 dark:data-[state=active]:text-indigo-400 data-[state=active]:border-indigo-200 dark:data-[state=active]:border-indigo-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-indigo-500/20 dark:data-[state=active]:bg-indigo-500/30 data-[state=active]:text-indigo-400 dark:data-[state=active]:text-indigo-300 data-[state=active]:border-indigo-400/50 dark:data-[state=active]:border-indigo-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Crop className="w-6 h-6" />
                 <span className="text-sm font-medium">Background</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="enterprise-security" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-emerald-50 dark:data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-200 dark:data-[state=active]:border-emerald-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-emerald-500/20 dark:data-[state=active]:bg-emerald-500/30 data-[state=active]:text-emerald-400 dark:data-[state=active]:text-emerald-300 data-[state=active]:border-emerald-400/50 dark:data-[state=active]:border-emerald-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <ShieldCheck className="w-6 h-6" />
                 <span className="text-sm font-medium">Enterprise</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="family-safety" 
-                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-cyan-50 dark:data-[state=active]:bg-cyan-900/20 data-[state=active]:text-cyan-600 dark:data-[state=active]:text-cyan-400 data-[state=active]:border-cyan-200 dark:data-[state=active]:border-cyan-800 rounded-xl border border-transparent transition-all duration-300 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-cyan-500/20 dark:data-[state=active]:bg-cyan-500/30 data-[state=active]:text-cyan-400 dark:data-[state=active]:text-cyan-300 data-[state=active]:border-cyan-400/50 dark:data-[state=active]:border-cyan-500/50 rounded-xl border border-transparent transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 transform hover:scale-105 backdrop-blur-sm"
               >
                 <Users className="w-6 h-6" />
                 <span className="text-sm font-medium">Family</span>
@@ -837,7 +910,7 @@ export default function Home() {
                 id: photo.id,
                 imageId: photo.id,
                 filename: photo.name,
-                status: photo.status,
+                status: photo.status === 'scanning' ? 'pending' : photo.status === 'safe' ? 'safe' : photo.status === 'flagged' ? 'flagged' : 'pending',
                 category: photo.categories?.[0] || 'unknown',
                 confidence: photo.confidence || 0.5,
                 recommendedAction: photo.status === 'flagged' ? 'quarantine' : 'allow',
@@ -862,12 +935,17 @@ export default function Home() {
 
           <TabsContent value="gallery" className="space-y-6">
             <Suspense fallback={
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-12 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+              <div className="glass-effect dark:glass-effect-dark rounded-2xl shadow-xl border border-white/20 dark:border-white/10 p-12 text-center animate-fade-in">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center animate-pulse-slow shadow-premium">
+                  <Loader2 className="w-8 h-8 text-white animate-spin" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Loading Gallery</h3>
-                <p className="text-slate-500 dark:text-slate-400">Preparing your photo collection...</p>
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2 animate-slide-up">Loading Gallery</h3>
+                <p className="text-slate-500 dark:text-slate-400 animate-fade-in">Preparing your photo collection with AI enhancement...</p>
+                <div className="mt-6 flex justify-center space-x-2">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.2}s` }}></div>
+                  ))}
+                </div>
               </div>
             }>
               <AIEnhancedPhotoManager
@@ -891,11 +969,7 @@ export default function Home() {
                   Smart tagging and intelligent photo organization powered by advanced AI
                 </p>
               </div>
-              <AIImageOrganizer 
-                photos={photos}
-                onPhotosUpdate={setPhotos}
-                isPremium={isPremium}
-              />
+              <AIImageOrganizer />
               <AITaggingModule
                 photos={photos.map(p => ({
                   ...p,
@@ -974,12 +1048,12 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-12 text-center">
-                <div className="w-20 h-20 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
-                  <Network className="w-10 h-10 text-slate-400" />
+              <div className="glass-effect dark:glass-effect-dark rounded-2xl shadow-xl border border-white/20 dark:border-white/10 p-12 text-center animate-fade-in">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center animate-pulse-slow shadow-premium">
+                  <Network className="w-10 h-10 text-white animate-pulse" />
                 </div>
-                <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3">No Photos for Analysis</h3>
-                <p className="text-slate-500 dark:text-slate-400 mb-6">
+                <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3 animate-slide-up">No Photos for Analysis</h3>
+                <p className="text-slate-500 dark:text-slate-400 mb-6 animate-fade-in">
                   Upload photos to enable multi-model AI analysis
                 </p>
                 <Button 
@@ -987,7 +1061,7 @@ export default function Home() {
                     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
                     if (fileInput) fileInput.click();
                   }} 
-                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  className="premium-button text-lg font-semibold py-3 px-8 rounded-xl shadow-premium animate-scale-in"
                 >
                   <ImageIcon className="w-5 h-5 mr-2" />
                   Upload Photos

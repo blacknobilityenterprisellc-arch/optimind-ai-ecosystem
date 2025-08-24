@@ -13,7 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { 
-  useSecureSubscription,
+  useSecureSubscription
+} from "@/lib/secure-subscription-manager";
+import { 
   useAIPhotoRestoration 
 } from "@/lib/ai-photo-restoration";
 import { 
@@ -37,7 +39,6 @@ import {
   Filter,
   Sliders,
   Brush,
-  Artwork,
   Camera,
   Palette,
   FileText,
@@ -48,8 +49,6 @@ import {
   Heart,
   RotateCcw,
   Crop,
-  Adjustments,
-  Contrast,
   Sun,
   Moon,
   Droplets,
@@ -58,54 +57,8 @@ import {
   Scissors,
   Maximize,
   Minimize,
-  Healing,
-  Brightness,
-  Grainy,
-  Moldy,
-  Vintage,
-  Sharpen,
-  Waves,
-  PencilSketch,
-  Noir,
-  PopArt,
-  ArtNouveau,
-  Baroque,
-  Renaissance,
-  Split,
-  Merge,
-  Clone,
-  Patch,
-  RedEye,
-  Blemish,
-  Wrinkle,
-  Scratch,
-  Dust,
-  Fade,
-  Crack,
-  Tear,
-  Stain,
-  Discoloration,
-  ColorCast,
-  Exposure,
-  WhiteBalance,
-  Focus,
-  MotionBlur,
-  Noisy,
-  Pixelated,
-  Compressed,
-  LowRes,
-  Damaged,
-  Aged,
-  Faded,
-  Yellowed,
-  Torn,
-  Creased,
-  Stained,
-  WaterDamaged,
-  FireDamaged,
-  InsectDamage,
-  LightDamage,
-  ChemicalDamage
+  Circle,
+  Waves
 } from "lucide-react";
 
 interface RestorationType {
@@ -195,7 +148,7 @@ export function AIPhotoRestoration() {
       name: "General Restoration",
       description: "Comprehensive restoration for various types of damage",
       category: "repair",
-      icon: <Healing className="w-5 h-5" />,
+      icon: <Heart className="w-5 h-5" />,
       credits: 80,
       isPremium: true,
       difficulty: "medium",
@@ -206,7 +159,7 @@ export function AIPhotoRestoration() {
       name: "Scratch & Tear Repair",
       description: "Remove scratches, tears, and physical damage",
       category: "repair",
-      icon: <Healing className="w-5 h-5" />,
+      icon: <Heart className="w-5 h-5" />,
       credits: 60,
       isPremium: false,
       difficulty: "easy",
@@ -217,7 +170,7 @@ export function AIPhotoRestoration() {
       name: "Fade & Color Restoration",
       description: "Restore faded colors and fix discoloration",
       category: "enhance",
-      icon: <Brightness className="w-5 h-5" />,
+      icon: <Sun className="w-5 h-5" />,
       credits: 50,
       isPremium: false,
       difficulty: "easy",
@@ -228,7 +181,7 @@ export function AIPhotoRestoration() {
       name: "Noise & Grain Reduction",
       description: "Remove digital noise and film grain",
       category: "enhance",
-      icon: <Grainy className="w-5 h-5" />,
+      icon: <Circle className="w-5 h-5" />,
       credits: 40,
       isPremium: false,
       difficulty: "easy",
@@ -294,7 +247,7 @@ export function AIPhotoRestoration() {
       name: "Detail Sharpening",
       description: "Enhance details and improve sharpness",
       category: "enhance",
-      icon: <Sharpen className="w-5 h-5" />,
+      icon: <Star className="w-5 h-5" />,
       credits: 35,
       isPremium: false,
       difficulty: "easy",
@@ -305,7 +258,7 @@ export function AIPhotoRestoration() {
       name: "Mold & Stain Removal",
       description: "Remove mold, stains, and discoloration",
       category: "repair",
-      icon: <Moldy className="w-5 h-5" />,
+      icon: <AlertTriangle className="w-5 h-5" />,
       credits: 75,
       isPremium: true,
       difficulty: "medium",
@@ -316,7 +269,7 @@ export function AIPhotoRestoration() {
       name: "Vintage Enhancement",
       description: "Enhance vintage photos while preserving character",
       category: "preserve",
-      icon: <Vintage className="w-5 h-5" />,
+      icon: <Clock className="w-5 h-5" />,
       credits: 55,
       isPremium: false,
       difficulty: "medium",
@@ -479,7 +432,7 @@ export function AIPhotoRestoration() {
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="text-center">
-                <Healing className="w-8 h-8 mx-auto text-green-500 mb-2" />
+                <Heart className="w-8 h-8 mx-auto text-green-500 mb-2" />
                 <div className="text-xs font-medium">Damage Repair</div>
               </div>
               <div className="text-center">

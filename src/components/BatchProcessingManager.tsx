@@ -19,7 +19,7 @@ import {
   CheckCircle,
   AlertTriangle,
   XCircle,
-  Queue,
+  List,
   Zap,
   BarChart3,
   FileText,
@@ -368,7 +368,7 @@ export function BatchProcessingManager() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Queue className="h-5 w-5" />
+                <List className="h-5 w-5" />
                 Jobs Queue
               </CardTitle>
             </CardHeader>
@@ -617,7 +617,7 @@ export function BatchProcessingManager() {
           ) : (
             <Card>
               <CardContent className="p-12 text-center">
-                <Queue className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <List className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No Active Job</h3>
                 <p className="text-muted-foreground">
                   Select a job from the queue to view details

@@ -15,6 +15,8 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { 
   useSecureSubscription,
+} from "@/lib/secure-subscription-manager";
+import { 
   useAIArtGenerator 
 } from "@/lib/ai-art-generator";
 import { 
