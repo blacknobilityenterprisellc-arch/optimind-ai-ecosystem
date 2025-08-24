@@ -370,12 +370,12 @@ export default function Home() {
                       <h4 className="font-semibold">Key Features:</h4>
                       <ul className="space-y-2">
                         {[
-                          "Local SEO optimization",
-                          "Multi-language support",
-                          "Cultural adaptation",
-                          "Regional keyword research",
-                          "Local business listings",
-                          "Geographic performance tracking"
+                          "Comprehensive engine optimization",
+                          "Multi-platform integration",
+                          "Cross-system automation",
+                          "Advanced performance tuning",
+                          "Unified management dashboard",
+                          "Scalable infrastructure optimization"
                         ].map((item, i) => (
                           <li key={i} className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4 text-purple-500" />
@@ -388,15 +388,15 @@ export default function Home() {
                       <h4 className="font-semibold">Results:</h4>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-sm">Local pack appearances</span>
+                          <span className="text-sm">System performance</span>
                           <span className="text-sm font-medium text-purple-600">+195%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm">International traffic</span>
+                          <span className="text-sm">Cross-platform efficiency</span>
                           <span className="text-sm font-medium text-purple-600">+310%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm">Local conversion rate</span>
+                          <span className="text-sm">Infrastructure scalability</span>
                           <span className="text-sm font-medium text-purple-600">+125%</span>
                         </div>
                       </div>
