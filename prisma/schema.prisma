@@ -17,16 +17,179 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  avatar    String?
+  role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  projects       Project[]
+  optimizations  Optimization[]
+  contents       Content[]
+  analyses       Analysis[]
+  subscriptions  Subscription[]
+  
+  @@map("users")
 }
 
-model Post {
-  id        String   @id @default(cuid())
+model Project {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  optimizations Optimization[]
+  contents     Content[]
+  analyses     Analysis[]
+  
+  @@map("projects")
+}
+
+model Optimization {
+  id        String           @id @default(cuid())
+  type      OptimizationType
   title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  content   String
+  status    OptimizationStatus @default(PENDING)
+  score     Float?
+  metadata  String?
+  projectId String
+  userId    String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analysis Analysis?
+  
+  @@map("optimizations")
+}
+
+model Content {
+  id          String      @id @default(cuid())
+  type        ContentType
+  title       String
+  content     String
+  status      ContentStatus @default(DRAFT)
+  metadata    String?
+  projectId   String
+  userId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("contents")
+}
+
+model Analysis {
+  id             String   @id @default(cuid())
+  type           AnalysisType
+  score          Float
+  insights       String
+  recommendations String
+  metadata       String?
+  optimizationId String   @unique
+  projectId      String
+  userId         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  optimization Optimization @relation(fields: [optimizationId], references: [id], onDelete: Cascade)
+  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("analyses")
+}
+
+model Subscription {
+  id          String           @id @default(cuid())
+  plan        SubscriptionPlan
+  status      SubscriptionStatus @default(ACTIVE)
+  startedAt   DateTime         @default(now())
+  endsAt      DateTime?
+  userId      String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("subscriptions")
+}
+
+// Enums
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ProjectStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum OptimizationType {
+  SEO
+  AEO
+  GEO
+  CONTENT
+  TECHNICAL
+}
+
+enum OptimizationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum ContentType {
+  ARTICLE
+  BLOG_POST
+  PRODUCT_DESCRIPTION
+  LANDING_PAGE
+  SOCIAL_MEDIA
+  EMAIL
+}
+
+enum ContentStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AnalysisType {
+  SEO_ANALYSIS
+  AEO_ANALYSIS
+  GEO_ANALYSIS
+  CONTENT_QUALITY
+  PERFORMANCE
+  COMPETITOR
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
 }
