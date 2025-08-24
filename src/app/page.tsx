@@ -24,6 +24,8 @@ import {
   Crown,
   User
 } from "lucide-react";
+import AIPoweredResearchStrategy from "@/components/AIPoweredResearchStrategy";
+import ContentOptimizationRefresh from "@/components/ContentOptimizationRefresh";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("seo");
@@ -459,6 +461,20 @@ export default function Home() {
               </Card>
             </TabsContent>
           </Tabs>
+        </div>
+      </section>
+
+      {/* AI-Powered Research & Strategy Module */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <AIPoweredResearchStrategy />
+        </div>
+      </section>
+
+      {/* Module 2: Content Optimization & Refresh */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <ContentOptimizationRefresh />
         </div>
       </section>
 

@@ -80,3 +80,119 @@ model SubscriptionUsage {
   
   @@unique([id])
 }
+
+// Research & Strategy Models
+model ContentAnalysis {
+  id                  String   @id @default(cuid())
+  user_id             String?
+  content             String
+  content_type        String   // "blog", "article", "product", "service", "faq"
+  analysis_results    Json     // Store analysis results as JSON
+  optimization_score  Int      // 0-100
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  @@map("content_analyses")
+}
+
+model CitationOpportunity {
+  id                  String   @id @default(cuid())
+  analysis_id         String?
+  type                String   // "statistic", "fact", "data", "quote"
+  content             String
+  source              String
+  confidence          Int      // 0-100
+  priority            String   // "high", "medium", "low"
+  is_implemented      Boolean  @default(false)
+  created_at          DateTime @default(now())
+  
+  @@map("citation_opportunities")
+}
+
+model EERecommendation {
+  id                  String   @id @default(cuid())
+  analysis_id         String?
+  category            String   // "experience", "expertise", "authoritativeness", "trustworthiness"
+  recommendation      String
+  impact              String   // "high", "medium", "low"
+  implementation      String
+  is_implemented      Boolean  @default(false)
+  created_at          DateTime @default(now())
+  
+  @@map("ee_recommendations")
+}
+
+model KeywordCluster {
+  id                  String   @id @default(cuid())
+  user_id             String?
+  topic               String
+  keywords            Json     // Array of keywords
+  intent              String   // "informational", "commercial", "navigational"
+  volume              Int      // Estimated monthly search volume
+  difficulty          Int      // 0-100
+  created_at          DateTime @default(now())
+  
+  @@map("keyword_clusters")
+}
+
+model BrandMention {
+  id                  String   @id @default(cuid())
+  user_id             String?
+  brand_name          String
+  source              String
+  url                 String?
+  title               String
+  snippet             String
+  sentiment           String   // "positive", "neutral", "negative"
+  authority           Int      // 0-100
+  mention_date        DateTime
+  type                String   // "ai_overview", "featured_snippet", "organic_result", "social_media"
+  created_at          DateTime @default(now())
+  
+  @@map("brand_mentions")
+}
+
+model BrandTrackingReport {
+  id                  String   @id @default(cuid())
+  user_id             String?
+  brand_name          String
+  time_range          Int      // Days (7, 30, 90, 365)
+  total_mentions      Int
+  ai_overview_mentions Int
+  featured_snippet_mentions Int
+  authority_score     Int      // 0-100
+  sentiment_score     Int      // 0-100
+  monthly_growth      Int      // Percentage
+  top_sources         Json     // Array of top sources
+  report_data         Json     // Complete report data
+  created_at          DateTime @default(now())
+  
+  @@map("brand_tracking_reports")
+}
+
+model GeneratedContent {
+  id                  String   @id @default(cuid())
+  user_id             String?
+  topic               String
+  content_type        String   // "blog", "article", "product", "service", "faq"
+  tone                String   // "professional", "casual", "informative", etc.
+  target_audience     String
+  content             String
+  metadata            Json     // Additional metadata
+  word_count          Int
+  created_at          DateTime @default(now())
+  
+  @@map("generated_contents")
+}
+
+model SchemaMarkup {
+  id                  String   @id @default(cuid())
+  analysis_id         String?
+  type                String   // Schema type (FAQPage, HowTo, etc.)
+  fields              Json     // Schema fields as JSON
+  confidence          Int      // 0-100
+  is_implemented      Boolean  @default(false)
+  created_at          DateTime @default(now())
+  
+  @@map("schema_markups")
+}
