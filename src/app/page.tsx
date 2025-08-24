@@ -416,27 +416,27 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 animate-gradient-x">
-      {/* Animated Background Particles */}
+      {/* Animated Background Particles - Optimized */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Floating gradient orbs */}
-        {[...Array(5)].map((_, i) => (
+        {/* Reduced floating gradient orbs for better performance */}
+        {[...Array(3)].map((_, i) => (
           <div
             key={`orb-${i}`}
             className="absolute rounded-full bg-gradient-to-br from-blue-400/10 via-purple-400/10 to-pink-400/10 blur-xl animate-float"
             style={{
-              width: `${100 + Math.random() * 200}px`,
-              height: `${100 + Math.random() * 200}px`,
+              width: `${80 + Math.random() * 120}px`,
+              height: `${80 + Math.random() * 120}px`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${20 + Math.random() * 10}s`,
+              animationDuration: `${25 + Math.random() * 15}s`,
               filter: 'blur(40px)'
             }}
           ></div>
         ))}
         
-        {/* Small floating particles */}
-        {[...Array(30)].map((_, i) => (
+        {/* Reduced small floating particles */}
+        {[...Array(15)].map((_, i) => (
           <div
             key={`particle-${i}`}
             className="absolute w-1 h-1 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full animate-float"
@@ -444,8 +444,8 @@ export default function Home() {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 5}s`,
-              opacity: Math.random() * 0.5 + 0.2
+              animationDuration: `${8 + Math.random() * 7}s`,
+              opacity: Math.random() * 0.4 + 0.1
             }}
           ></div>
         ))}
