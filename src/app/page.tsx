@@ -18,7 +18,11 @@ import {
   Star,
   ArrowRight,
   CheckCircle,
-  TrendingUp
+  TrendingUp,
+  Brain,
+  Settings,
+  Crown,
+  User
 } from "lucide-react";
 
 export default function Home() {
@@ -42,14 +46,14 @@ export default function Home() {
     {
       icon: Globe,
       title: "GEO Targeting",
-      description: "Geographic optimization for local and international market penetration",
+      description: "Generalized Engine Optimization for comprehensive digital presence management",
       color: "text-purple-600",
       bgColor: "bg-purple-50"
     },
     {
       icon: ImageIcon,
-      title: "AI Photo Editing",
-      description: "Intelligent image enhancement and NSFW detection for brand safety",
+      title: "AI Photo Enhancement",
+      description: "Intelligent image enhancement and user-controlled content analysis",
       color: "text-orange-600",
       bgColor: "bg-orange-50"
     },
@@ -62,8 +66,8 @@ export default function Home() {
     },
     {
       icon: Shield,
-      title: "Brand Safety",
-      description: "Comprehensive NSFW detection and content moderation tools",
+      title: "Privacy Controls",
+      description: "User-controlled privacy settings and customizable content preferences",
       color: "text-red-600",
       bgColor: "bg-red-50"
     }
@@ -110,14 +114,14 @@ export default function Home() {
               <div className="space-y-4">
                 <Badge variant="secondary" className="px-4 py-2 text-sm font-medium">
                   <Zap className="w-4 h-4 mr-2" />
-                  AI-Powered Optimization Platform
+                  Inclusive AI Platform
                 </Badge>
                 <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Transform Your Digital Presence with AI
+                  Advanced Intelligence for All Creators
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Advanced SEO, AEO, and GEO optimization powered by cutting-edge AI. 
-                  Create, optimize, and scale your digital content with intelligent automation.
+                  Powerful SEO, AEO, GEO, and AIO optimization with user-controlled privacy and content preferences. 
+                  Create, optimize, and scale your digital presence with intelligent automation that respects your choices.
                 </p>
               </div>
               
@@ -196,7 +200,7 @@ export default function Home() {
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold">Powerful AI-Driven Features</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Everything you need to optimize your digital presence with cutting-edge artificial intelligence
+              Everything you need to optimize your digital presence with user-controlled AI tools that respect your creative freedom
             </p>
           </div>
 
@@ -224,7 +228,7 @@ export default function Home() {
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold">Comprehensive Optimization Solutions</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Specialized AI tools for every aspect of your digital optimization needs
+              Specialized AI tools for every aspect of your digital optimization needs, with user-controlled preferences
             </p>
           </div>
 

@@ -17,179 +17,66 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
-  avatar    String?
-  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SecuritySettings {
+  id       String @id @default("main")
+  pin_hash String
+  salt     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  projects       Project[]
-  optimizations  Optimization[]
-  contents       Content[]
-  analyses       Analysis[]
-  subscriptions  Subscription[]
-  
-  @@map("users")
+  @@unique([id])
 }
 
-model Project {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  status      ProjectStatus @default(ACTIVE)
-  userId      String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  // Relations
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  optimizations Optimization[]
-  contents     Content[]
-  analyses     Analysis[]
+model Session {
+  token      String   @id
+  expires_at DateTime
+  created_at DateTime @default(now())
   
-  @@map("projects")
-}
-
-model Optimization {
-  id        String           @id @default(cuid())
-  type      OptimizationType
-  title     String
-  content   String
-  status    OptimizationStatus @default(PENDING)
-  score     Float?
-  metadata  String?
-  projectId String
-  userId    String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
-
-  // Relations
-  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  analysis Analysis?
-  
-  @@map("optimizations")
-}
-
-model Content {
-  id          String      @id @default(cuid())
-  type        ContentType
-  title       String
-  content     String
-  status      ContentStatus @default(DRAFT)
-  metadata    String?
-  projectId   String
-  userId      String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  // Relations
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@map("contents")
-}
-
-model Analysis {
-  id             String   @id @default(cuid())
-  type           AnalysisType
-  score          Float
-  insights       String
-  recommendations String
-  metadata       String?
-  optimizationId String   @unique
-  projectId      String
-  userId         String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Relations
-  optimization Optimization @relation(fields: [optimizationId], references: [id], onDelete: Cascade)
-  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@map("analyses")
+  @@unique([token])
 }
 
 model Subscription {
-  id          String           @id @default(cuid())
-  plan        SubscriptionPlan
-  status      SubscriptionStatus @default(ACTIVE)
-  startedAt   DateTime         @default(now())
-  endsAt      DateTime?
-  userId      String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String   @id @default(cuid())
+  user_id             String?
+  plan_id             String
+  status              String   // "active", "cancelled", "expired", "trial"
+  current_period_start DateTime
+  current_period_end   DateTime
+  trial_end           DateTime?
+  cancel_at_period_end Boolean  @default(false)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
   
-  @@map("subscriptions")
+  @@unique([id])
 }
 
-// Enums
-enum UserRole {
-  USER
-  ADMIN
-  SUPER_ADMIN
-}
-
-enum ProjectStatus {
-  ACTIVE
-  INACTIVE
-  ARCHIVED
-}
-
-enum OptimizationType {
-  SEO
-  AEO
-  GEO
-  CONTENT
-  TECHNICAL
-}
-
-enum OptimizationStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-}
-
-enum ContentType {
-  ARTICLE
-  BLOG_POST
-  PRODUCT_DESCRIPTION
-  LANDING_PAGE
-  SOCIAL_MEDIA
-  EMAIL
-}
-
-enum ContentStatus {
-  DRAFT
-  REVIEW
-  PUBLISHED
-  ARCHIVED
-}
-
-enum AnalysisType {
-  SEO_ANALYSIS
-  AEO_ANALYSIS
-  GEO_ANALYSIS
-  CONTENT_QUALITY
-  PERFORMANCE
-  COMPETITOR
-}
-
-enum SubscriptionPlan {
-  FREE
-  BASIC
-  PRO
-  ENTERPRISE
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  CANCELLED
-  EXPIRED
-  PENDING
+model SubscriptionUsage {
+  id                  String   @id @default(cuid())
+  subscription_id     String?
+  storage_used        Int      @default(0)
+  storage_limit       Int      @default(536870912) // 500MB in bytes
+  photos_scanned      Int      @default(0)
+  scan_limit          Int      @default(100)
+  ai_tags_generated   Int      @default(0)
+  ai_tag_limit        Int      @default(500)
+  vault_access        Boolean  @default(false)
+  advanced_editing    Boolean  @default(false)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  @@unique([id])
 }
