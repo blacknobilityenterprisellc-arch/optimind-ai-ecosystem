@@ -8,25 +8,21 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Users, 
-  Search, 
-  Target, 
-  TrendingUp, 
-  BarChart3, 
-  FileText,
+  Search,
+  Target,
+  Users,
+  TrendingUp,
+  BarChart3,
   Eye,
-  CheckCircle,
+  ThumbsUp,
   AlertTriangle,
-  Lightbulb,
-  Zap,
-  Award,
-  Clock,
+  CheckCircle,
   Loader2,
   Globe,
-  ThumbsUp,
-  ThumbsDown,
-  ArrowRight,
-  Star
+  Zap,
+  Award,
+  FileText,
+  ArrowRight
 } from "lucide-react";
 
 interface CompetitorContent {
@@ -35,219 +31,202 @@ interface CompetitorContent {
   title: string;
   domain: string;
   wordCount: number;
-  publishedDate: string;
-  lastUpdated: string;
+  publishDate: string;
   contentScore: number;
   seoScore: number;
   readabilityScore: number;
   engagementScore: number;
-  ranking: number;
   backlinks: number;
   socialShares: number;
+  ranking: number;
 }
 
 interface ContentGap {
   id: string;
-  type: 'missing_topic' | 'outdated_info' | 'poor_coverage' | 'missing_format' | 'weak_examples';
+  type: 'missing_topic' | 'content_depth' | 'format_opportunity' | 'keyword_gap' | 'multimedia_gap';
   title: string;
   description: string;
   priority: 'high' | 'medium' | 'low';
-  difficulty: 'easy' | 'medium' | 'hard';
+  competitorCount: number;
   estimatedImpact: number;
-  competitorCoverage: string[];
 }
 
-interface SWOTAnalysis {
-  strengths: string[];
-  weaknesses: string[];
-  opportunities: string[];
-  threats: string[];
-}
-
-interface ContentStrategy {
-  targetKeywords: string[];
-  contentAngles: string[];
-  formatRecommendations: string[];
-  timeline: string;
-  resources: string[];
+interface StrengthWeakness {
+  id: string;
+  competitor: string;
+  type: 'strength' | 'weakness';
+  category: string;
+  description: string;
+  impact: number;
 }
 
 export default function CompetitorContentAnalyzer() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [competitorUrl, setCompetitorUrl] = useState("");
-  const [analysisResults, setAnalysisResults] = useState<{
-    content: CompetitorContent;
-    gaps: ContentGap[];
-    swot: SWOTAnalysis;
-    strategy: ContentStrategy;
-  } | null>(null);
+  const [competitorUrls, setCompetitorUrls] = useState<string[]>(["", ""]);
+  const [analysisResults, setAnalysisResults] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // Mock competitor analysis data
-  const mockCompetitorContent: CompetitorContent = {
-    id: "1",
-    url: "https://competitor.com/voice-search-guide",
-    title: "Complete Voice Search Optimization Guide 2024",
-    domain: "competitor.com",
-    wordCount: 3200,
-    publishedDate: "2024-01-10",
-    lastUpdated: "2024-02-15",
-    contentScore: 88,
-    seoScore: 92,
-    readabilityScore: 85,
-    engagementScore: 78,
-    ranking: 1,
-    backlinks: 145,
-    socialShares: 892
-  };
+  // Mock data for demonstration
+  const mockCompetitorContent: CompetitorContent[] = [
+    {
+      id: "1",
+      url: "https://competitor-a.com/voice-search-guide",
+      title: "Complete Voice Search Optimization Guide 2024",
+      domain: "competitor-a.com",
+      wordCount: 4200,
+      publishDate: "2024-01-15",
+      contentScore: 88,
+      seoScore: 85,
+      readabilityScore: 92,
+      engagementScore: 78,
+      backlinks: 245,
+      socialShares: 1200,
+      ranking: 1
+    },
+    {
+      id: "2",
+      url: "https://competitor-b.com/voice-seo",
+      title: "Voice SEO: The Ultimate Guide",
+      domain: "competitor-b.com",
+      wordCount: 3800,
+      publishDate: "2024-02-01",
+      contentScore: 82,
+      seoScore: 79,
+      readabilityScore: 85,
+      engagementScore: 72,
+      backlinks: 189,
+      socialShares: 890,
+      ranking: 3
+    }
+  ];
 
   const mockContentGaps: ContentGap[] = [
     {
       id: "1",
       type: "missing_topic",
-      title: "Multilingual Voice Search",
-      description: "No coverage of voice search optimization for multiple languages",
+      title: "AI Assistant Optimization",
+      description: "None of the competitors cover optimization for AI assistants like ChatGPT and Claude",
       priority: "high",
-      difficulty: "medium",
-      estimatedImpact: 85,
-      competitorCoverage: ["Basic mention only", "No examples"]
+      competitorCount: 0,
+      estimatedImpact: 90
     },
     {
       id: "2",
-      type: "outdated_info",
-      title: "AI Assistant Updates",
-      description: "Missing latest AI assistant capabilities and features",
-      priority: "high",
-      difficulty: "easy",
-      estimatedImpact: 75,
-      competitorCoverage: ["Outdated examples", "Missing new features"]
+      type: "content_depth",
+      title: "Case Studies Section",
+      description: "Competitors lack real-world case studies and examples",
+      priority: "medium",
+      competitorCount: 1,
+      estimatedImpact: 75
     },
     {
       id: "3",
-      type: "missing_format",
-      title: "Video Content",
-      description: "No video tutorials or demonstrations",
+      type: "multimedia_gap",
+      title: "Video Content Integration",
+      description: "Missing video tutorials and visual explanations",
       priority: "medium",
-      difficulty: "hard",
-      estimatedImpact: 90,
-      competitorCoverage: ["Text only", "No multimedia"]
+      competitorCount: 2,
+      estimatedImpact: 65
     },
     {
       id: "4",
-      type: "weak_examples",
-      title: "Case Studies",
-      description: "Limited real-world implementation examples",
-      priority: "medium",
-      difficulty: "medium",
-      estimatedImpact: 70,
-      competitorCoverage: ["Generic examples", "No specific cases"]
+      type: "keyword_gap",
+      title: "Long-tail Voice Queries",
+      description: "Opportunity to target specific long-tail voice search keywords",
+      priority: "high",
+      competitorCount: 1,
+      estimatedImpact: 85
     }
   ];
 
-  const mockSWOT: SWOTAnalysis = {
-    strengths: [
-      "Comprehensive coverage of voice search basics",
-      "Well-structured content with clear headings",
-      "Strong SEO optimization with proper keywords",
-      "Recent content updates",
-      "Good internal linking structure"
-    ],
-    weaknesses: [
-      "Lacks multimedia content (videos, infographics)",
-      "Limited real-world case studies",
-      "No coverage of multilingual voice search",
-      "Outdated AI assistant examples",
-      "Poor mobile optimization"
-    ],
-    opportunities: [
-      "Add video tutorials and demonstrations",
-      "Include expert interviews and quotes",
-      "Create interactive tools and calculators",
-      "Expand to cover voice commerce",
-      "Add local business voice search strategies"
-    ],
-    threats: [
-      "Google's algorithm changes affecting voice search",
-      "New competitors entering the space",
-      "Rapidly evolving AI assistant technology",
-      "Increasing competition for voice search keywords",
-      "User behavior shifts in search patterns"
-    ]
-  };
+  const mockStrengthsWeaknesses: StrengthWeakness[] = [
+    {
+      id: "1",
+      competitor: "Competitor A",
+      type: "strength",
+      category: "Content Depth",
+      description: "Comprehensive coverage with detailed examples",
+      impact: 85
+    },
+    {
+      id: "2",
+      competitor: "Competitor A",
+      type: "weakness",
+      category: "Readability",
+      description: "Technical jargon makes it hard for beginners",
+      impact: 60
+    },
+    {
+      id: "3",
+      competitor: "Competitor B",
+      type: "strength",
+      category: "Structure",
+      description: "Clear, well-organized content hierarchy",
+      impact: 80
+    },
+    {
+      id: "4",
+      competitor: "Competitor B",
+      type: "weakness",
+      category: "Freshness",
+      description: "Some statistics and examples are outdated",
+      impact: 70
+    }
+  ];
 
-  const mockStrategy: ContentStrategy = {
-    targetKeywords: [
-      "voice search optimization 2024",
-      "AI assistant SEO",
-      "multilingual voice search",
-      "voice commerce optimization",
-      "local business voice search"
-    ],
-    contentAngles: [
-      "Enterprise voice search implementation",
-      "Voice search for e-commerce",
-      "Multilingual voice optimization",
-      "AI assistant compatibility",
-      "Voice search analytics and tracking"
-    ],
-    formatRecommendations: [
-      "Create comprehensive guide with video tutorials",
-      "Add interactive voice search simulator",
-      "Include downloadable checklist and templates",
-      "Develop case study series",
-      "Create expert interview series"
-    ],
-    timeline: "8-12 weeks",
-    resources: [
-      "Content writer with SEO expertise",
-      "Video production team",
-      "Voice search experts for interviews",
-      "UX/UI designer for interactive tools",
-      "Developer for technical implementation"
-    ]
-  };
-
-  const handleAnalyzeCompetitor = async () => {
-    if (!competitorUrl) return;
+  const handleAnalyzeCompetitors = async () => {
+    const validUrls = competitorUrls.filter(url => url.trim() !== "");
+    if (validUrls.length === 0) return;
     
     setIsAnalyzing(true);
     // Simulate API call
     setTimeout(() => {
       setAnalysisResults({
-        content: mockCompetitorContent,
+        competitors: mockCompetitorContent,
         gaps: mockContentGaps,
-        swot: mockSWOT,
-        strategy: mockStrategy
+        analysis: mockStrengthsWeaknesses,
+        summary: {
+          averageContentScore: 85,
+          averageSeoScore: 82,
+          topOpportunities: 4,
+          contentGapsFound: 12
+        }
       });
       setIsAnalyzing(false);
-    }, 3000);
+    }, 3500);
+  };
+
+  const addCompetitorUrl = () => {
+    setCompetitorUrls([...competitorUrls, ""]);
+  };
+
+  const removeCompetitorUrl = (index: number) => {
+    setCompetitorUrls(competitorUrls.filter((_, i) => i !== index));
+  };
+
+  const updateCompetitorUrl = (index: number, value: string) => {
+    const newUrls = [...competitorUrls];
+    newUrls[index] = value;
+    setCompetitorUrls(newUrls);
+  };
+
+  const getGapIcon = (type: string) => {
+    switch (type) {
+      case 'missing_topic': return <Target className="w-4 h-4 text-red-500" />;
+      case 'content_depth': return <FileText className="w-4 h-4 text-blue-500" />;
+      case 'format_opportunity': return <Eye className="w-4 h-4 text-purple-500" />;
+      case 'keyword_gap': return <Search className="w-4 h-4 text-green-500" />;
+      case 'multimedia_gap': return <Zap className="w-4 h-4 text-orange-500" />;
+      default: return <AlertTriangle className="w-4 h-4 text-gray-500" />;
+    }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'destructive';
-      case 'medium': return 'default';
-      case 'low': return 'secondary';
-      default: return 'outline';
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return 'text-green-600';
+      case 'high': return 'text-red-600';
       case 'medium': return 'text-yellow-600';
-      case 'hard': return 'text-red-600';
+      case 'low': return 'text-green-600';
       default: return 'text-gray-600';
-    }
-  };
-
-  const getGapTypeIcon = (type: string) => {
-    switch (type) {
-      case 'missing_topic': return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      case 'outdated_info': return <Clock className="w-4 h-4 text-yellow-500" />;
-      case 'poor_coverage': return <ThumbsDown className="w-4 h-4 text-orange-500" />;
-      case 'missing_format': return <FileText className="w-4 h-4 text-blue-500" />;
-      case 'weak_examples': return <Lightbulb className="w-4 h-4 text-purple-500" />;
-      default: return <Search className="w-4 h-4 text-gray-500" />;
     }
   };
 
@@ -256,46 +235,69 @@ export default function CompetitorContentAnalyzer() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-bold">Competitor Content Analysis</h3>
+          <h3 className="text-2xl font-bold">Competitor Content Analyzer</h3>
           <p className="text-muted-foreground">
-            Analyze competitor content strategies and identify opportunities to outperform them
+            Analyze competitor content to identify gaps, opportunities, and improvement areas
           </p>
         </div>
       </div>
 
-      {/* Analysis Input */}
+      {/* Input Section */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5 text-purple-600" />
-            Analyze Competitor Content
+            Competitor URLs
           </CardTitle>
           <CardDescription>
-            Enter a competitor URL to analyze their content strategy and identify gaps
+            Enter competitor URLs to analyze their content strategy and identify opportunities
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Enter competitor URL..."
-                value={competitorUrl}
-                onChange={(e) => setCompetitorUrl(e.target.value)}
-              />
-            </div>
-            <Button 
-              onClick={handleAnalyzeCompetitor}
-              disabled={!competitorUrl || isAnalyzing}
+          <div className="space-y-3">
+            {competitorUrls.map((url, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  placeholder="Enter competitor URL..."
+                  value={url}
+                  onChange={(e) => updateCompetitorUrl(index, e.target.value)}
+                  className="flex-1"
+                />
+                {competitorUrls.length > 1 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeCompetitorUrl(index)}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={addCompetitorUrl}
+              disabled={competitorUrls.length >= 5}
+            >
+              Add Competitor
+            </Button>
+            <Button
+              onClick={handleAnalyzeCompetitors}
+              disabled={competitorUrls.filter(url => url.trim() !== "").length === 0 || isAnalyzing}
+              className="flex-1"
             >
               {isAnalyzing ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Analyzing...
+                  Analyzing Competitors...
                 </>
               ) : (
                 <>
                   <Search className="w-4 h-4 mr-2" />
-                  Analyze Competitor
+                  Analyze Competitors
                 </>
               )}
             </Button>
@@ -304,338 +306,257 @@ export default function CompetitorContentAnalyzer() {
       </Card>
 
       {analysisResults && (
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="gaps">Content Gaps</TabsTrigger>
-            <TabsTrigger value="swot">SWOT Analysis</TabsTrigger>
-            <TabsTrigger value="strategy">Strategy</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            {/* Competitor Content Overview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  Content Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">{analysisResults.content.title}</h4>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                      <span className="flex items-center gap-1">
-                        <Globe className="w-4 h-4" />
-                        {analysisResults.content.domain}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Star className="w-4 h-4" />
-                        Rank #{analysisResults.content.ranking}
-                      </span>
-                      <span>{analysisResults.content.wordCount.toLocaleString()} words</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-green-600">{analysisResults.content.contentScore}%</div>
-                    <div className="text-sm text-muted-foreground">Content Score</div>
-                  </div>
+        <>
+          {/* Summary Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-green-600" />
+                Analysis Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{analysisResults.summary.averageContentScore}%</div>
+                  <div className="text-sm text-muted-foreground">Avg Content Score</div>
                 </div>
-
-                {/* Score Breakdown */}
-                <div className="grid md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-xl font-bold text-blue-600">{analysisResults.content.seoScore}%</div>
-                    <div className="text-sm text-muted-foreground">SEO Score</div>
-                  </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-xl font-bold text-green-600">{analysisResults.content.readabilityScore}%</div>
-                    <div className="text-sm text-muted-foreground">Readability</div>
-                  </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-xl font-bold text-purple-600">{analysisResults.content.engagementScore}%</div>
-                    <div className="text-sm text-muted-foreground">Engagement</div>
-                  </div>
-                  <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-xl font-bold text-orange-600">{analysisResults.content.backlinks}</div>
-                    <div className="text-sm text-muted-foreground">Backlinks</div>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{analysisResults.summary.averageSeoScore}%</div>
+                  <div className="text-sm text-muted-foreground">Avg SEO Score</div>
                 </div>
-
-                {/* Content Metrics */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Content Metrics</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm">Word Count</span>
-                        <span className="text-sm font-medium">{analysisResults.content.wordCount.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Social Shares</span>
-                        <span className="text-sm font-medium">{analysisResults.content.socialShares.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Backlinks</span>
-                        <span className="text-sm font-medium">{analysisResults.content.backlinks}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Search Ranking</span>
-                        <span className="text-sm font-medium">#{analysisResults.content.ranking}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Publication Info</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm">Published</span>
-                        <span className="text-sm font-medium">{new Date(analysisResults.content.publishedDate).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Last Updated</span>
-                        <span className="text-sm font-medium">{new Date(analysisResults.content.lastUpdated).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Content Age</span>
-                        <span className="text-sm font-medium">
-                          {Math.floor((Date.now() - new Date(analysisResults.content.publishedDate).getTime()) / (1000 * 60 * 60 * 24))} days
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{analysisResults.summary.topOpportunities}</div>
+                  <div className="text-sm text-muted-foreground">Top Opportunities</div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">{analysisResults.summary.contentGapsFound}</div>
+                  <div className="text-sm text-muted-foreground">Content Gaps Found</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="gaps" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-red-600" />
-                  Content Gap Analysis
-                </CardTitle>
-                <CardDescription>
-                  Identify opportunities where you can outperform competitor content
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {analysisResults.gaps.map((gap) => (
-                    <Card key={gap.id} className="border-l-4 border-l-red-500">
-                      <CardContent className="pt-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            {getGapTypeIcon(gap.type)}
-                            <div>
-                              <h4 className="font-semibold">{gap.title}</h4>
-                              <p className="text-sm text-muted-foreground">{gap.description}</p>
+          {/* Main Analysis Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="competitors">Competitors</TabsTrigger>
+              <TabsTrigger value="gaps">Content Gaps</TabsTrigger>
+              <TabsTrigger value="analysis">Analysis</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="competitors" className="space-y-6">
+              <div className="space-y-4">
+                {analysisResults.competitors.map((competitor: CompetitorContent) => (
+                  <Card key={competitor.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-4">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h4 className="font-semibold mb-1">{competitor.title}</h4>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                            <span className="flex items-center gap-1">
+                              <Globe className="w-4 h-4" />
+                              {competitor.domain}
+                            </span>
+                            <span>Rank: #{competitor.ranking}</span>
+                            <span>{competitor.wordCount} words</span>
+                            <span>{new Date(competitor.publishDate).toLocaleDateString()}</span>
+                          </div>
+                          <Badge variant="outline" className="mb-3">
+                            {competitor.backlinks} backlinks • {competitor.socialShares} shares
+                          </Badge>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          View Content
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-4">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Content Score</div>
+                          <div className="flex items-center gap-2">
+                            <Progress value={competitor.contentScore} className="flex-1 h-2" />
+                            <span className="text-sm font-medium">{competitor.contentScore}%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">SEO Score</div>
+                          <div className="flex items-center gap-2">
+                            <Progress value={competitor.seoScore} className="flex-1 h-2" />
+                            <span className="text-sm font-medium">{competitor.seoScore}%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Readability</div>
+                          <div className="flex items-center gap-2">
+                            <Progress value={competitor.readabilityScore} className="flex-1 h-2" />
+                            <span className="text-sm font-medium">{competitor.readabilityScore}%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Engagement</div>
+                          <div className="flex items-center gap-2">
+                            <Progress value={competitor.engagementScore} className="flex-1 h-2" />
+                            <span className="text-sm font-medium">{competitor.engagementScore}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="gaps" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-5 h-5 text-red-600" />
+                    Content Gap Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Opportunities where you can outperform competitors
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analysisResults.gaps.map((gap: ContentGap) => (
+                      <Card key={gap.id} className="border-l-4 border-l-green-500">
+                        <CardContent className="pt-4">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              {getGapIcon(gap.type)}
+                              <Badge variant={gap.priority === 'high' ? 'destructive' : 'secondary'}>
+                                {gap.priority}
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              Impact: {gap.estimatedImpact}%
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant={getPriorityColor(gap.priority)}>
-                              {gap.priority}
+                          
+                          <h4 className="font-semibold mb-2">{gap.title}</h4>
+                          <p className="text-sm text-muted-foreground mb-3">{gap.description}</p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm text-muted-foreground">
+                              {gap.competitorCount} competitors cover this
+                            </div>
+                            <Button variant="outline" size="sm">
+                              Create Content <ArrowRight className="w-4 h-4 ml-1" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="analysis" className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Competitor Strengths
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {analysisResults.analysis
+                      .filter((item: StrengthWeakness) => item.type === 'strength')
+                      .map((item: StrengthWeakness) => (
+                        <div key={item.id} className="p-3 bg-green-50 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <Badge variant="outline" className="text-green-700">
+                              {item.category}
                             </Badge>
-                            <Badge variant="outline" className={getDifficultyColor(gap.difficulty)}>
-                              {gap.difficulty}
-                            </Badge>
+                            <span className="text-sm text-muted-foreground">
+                              {item.competitor}
+                            </span>
                           </div>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="text-sm">
-                            <span className="font-medium">Estimated Impact:</span> {gap.estimatedImpact}%
+                          <p className="text-sm text-green-800">{item.description}</p>
+                          <div className="text-xs text-green-600 mt-1">
+                            Impact: {item.impact}%
                           </div>
-                          <Progress value={gap.estimatedImpact} className="w-32 h-2" />
-                        </div>
-
-                        <div className="space-y-2">
-                          <h5 className="text-sm font-medium text-red-600">Competitor Coverage:</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {gap.competitorCoverage.map((coverage, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {coverage}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="swot" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-green-600">
-                    <ThumbsUp className="w-5 h-5" />
-                    Strengths
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.swot.strengths.map((strength, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        {strength}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-600">
-                    <ThumbsDown className="w-5 h-5" />
-                    Weaknesses
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.swot.weaknesses.map((weakness, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                        {weakness}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-blue-600">
-                    <Lightbulb className="w-5 h-5" />
-                    Opportunities
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.swot.opportunities.map((opportunity, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <Zap className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        {opportunity}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-orange-600">
-                    <AlertTriangle className="w-5 h-5" />
-                    Threats
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.swot.threats.map((threat, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <AlertTriangle className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                        {threat}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="strategy" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-purple-600" />
-                  Recommended Strategy
-                </CardTitle>
-                <CardDescription>
-                  Data-driven strategy to outperform competitor content
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Target Keywords</h4>
-                    <div className="space-y-2">
-                      {analysisResults.strategy.targetKeywords.map((keyword, index) => (
-                        <div key={index} className="flex items-center gap-2 p-2 bg-blue-50 rounded">
-                          <Target className="w-4 h-4 text-blue-600" />
-                          <span className="text-sm">{keyword}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
+                  </CardContent>
+                </Card>
 
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Content Angles</h4>
-                    <div className="space-y-2">
-                      {analysisResults.strategy.contentAngles.map((angle, index) => (
-                        <div key={index} className="flex items-center gap-2 p-2 bg-green-50 rounded">
-                          <Lightbulb className="w-4 h-4 text-green-600" />
-                          <span className="text-sm">{angle}</span>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                      Competitor Weaknesses
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {analysisResults.analysis
+                      .filter((item: StrengthWeakness) => item.type === 'weakness')
+                      .map((item: StrengthWeakness) => (
+                        <div key={item.id} className="p-3 bg-red-50 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <Badge variant="outline" className="text-red-700">
+                              {item.category}
+                            </Badge>
+                            <span className="text-sm text-muted-foreground">
+                              {item.competitor}
+                            </span>
+                          </div>
+                          <p className="text-sm text-red-800">{item.description}</p>
+                          <div className="text-xs text-red-600 mt-1">
+                            Impact: {item.impact}%
+                          </div>
                         </div>
                       ))}
-                    </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                <div className="space-y-4">
-                  <h4 className="font-semibold">Format Recommendations</h4>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    {analysisResults.strategy.formatRecommendations.map((format, index) => (
-                      <div key={index} className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg">
-                        <FileText className="w-4 h-4 text-purple-600" />
-                        <span className="text-sm">{format}</span>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Award className="w-5 h-5 text-purple-600" />
+                    Strategic Recommendations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h4 className="font-semibold">Immediate Actions</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 p-2 bg-blue-50 rounded">
+                          <Zap className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">Target AI assistant optimization gap</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
+                          <TrendingUp className="w-4 h-4 text-green-500" />
+                          <span className="text-sm">Create comprehensive case studies</span>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Timeline</h4>
-                    <div className="p-4 bg-orange-50 rounded-lg">
-                      <div className="text-lg font-bold text-orange-600">{analysisResults.strategy.timeline}</div>
-                      <div className="text-sm text-muted-foreground">Estimated completion time</div>
                     </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">Required Resources</h4>
-                    <div className="space-y-2">
-                      {analysisResults.strategy.resources.map((resource, index) => (
-                        <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                          <Users className="w-4 h-4 text-gray-600" />
-                          <span className="text-sm">{resource}</span>
+                    
+                    <div className="space-y-3">
+                      <h4 className="font-semibold">Long-term Strategy</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 p-2 bg-purple-50 rounded">
+                          <Eye className="w-4 h-4 text-purple-500" />
+                          <span className="text-sm">Develop video content series</span>
                         </div>
-                      ))}
+                        <div className="flex items-center gap-2 p-2 bg-orange-50 rounded">
+                          <FileText className="w-4 h-4 text-orange-500" />
+                          <span className="text-sm">Build out long-tail keyword strategy</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="pt-4 flex gap-3">
-                  <Button className="flex-1">
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Implement Strategy
-                  </Button>
-                  <Button variant="outline" className="flex-1">
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    Export Strategy
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </>
       )}
     </div>
   );

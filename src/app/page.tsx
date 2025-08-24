@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import AIPoweredResearchStrategy from "@/components/AIPoweredResearchStrategy";
 import ContentOptimizationRefresh from "@/components/ContentOptimizationRefresh";
+import NonTextMultimodalOptimization from "@/components/NonTextMultimodalOptimization";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("seo");
@@ -475,6 +476,13 @@ export default function Home() {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <ContentOptimizationRefresh />
+        </div>
+      </section>
+
+      {/* Module 3: Non-Text & Multimodal Optimization */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <NonTextMultimodalOptimization />
         </div>
       </section>
 
