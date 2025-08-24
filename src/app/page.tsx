@@ -361,7 +361,7 @@ export default function Home() {
                     GEO Targeting
                   </CardTitle>
                   <CardDescription>
-                    Master geographic optimization for local and global markets
+                    Generalized Engine Optimization for comprehensive digital presence management
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -398,6 +398,59 @@ export default function Home() {
                         <div className="flex justify-between">
                           <span className="text-sm">Local conversion rate</span>
                           <span className="text-sm font-medium text-purple-600">+125%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="aio" className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Brain className="w-6 h-6 text-cyan-600" />
+                    AIO Optimization
+                  </CardTitle>
+                  <CardDescription>
+                    Artificial Intelligence Optimization for advanced automation and intelligent workflows
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Key Features:</h4>
+                      <ul className="space-y-2">
+                        {[
+                          "Advanced AI automation",
+                          "Intelligent workflow optimization",
+                          "Multi-model ensemble analysis",
+                          "Predictive analytics",
+                          "User-controlled AI preferences",
+                          "Adaptive learning systems"
+                        ].map((item, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4 text-cyan-500" />
+                            <span className="text-sm">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Results:</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Automation efficiency</span>
+                          <span className="text-sm font-medium text-cyan-600">+85%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Workflow optimization</span>
+                          <span className="text-sm font-medium text-cyan-600">+220%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">AI decision accuracy</span>
+                          <span className="text-sm font-medium text-cyan-600">+175%</span>
                         </div>
                       </div>
                     </div>
