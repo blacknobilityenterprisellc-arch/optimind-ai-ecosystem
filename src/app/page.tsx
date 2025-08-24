@@ -70,6 +70,13 @@ export default function Home() {
       description: "User-controlled privacy settings and customizable content preferences",
       color: "text-red-600",
       bgColor: "bg-red-50"
+    },
+    {
+      icon: Brain,
+      title: "AIO Optimization",
+      description: "Artificial Intelligence Optimization for advanced automation and intelligent workflows",
+      color: "text-cyan-600",
+      bgColor: "bg-cyan-50"
     }
   ];
 
@@ -233,10 +240,11 @@ export default function Home() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="seo">SEO</TabsTrigger>
               <TabsTrigger value="aeo">AEO</TabsTrigger>
               <TabsTrigger value="geo">GEO</TabsTrigger>
+              <TabsTrigger value="aio">AIO</TabsTrigger>
             </TabsList>
 
             <TabsContent value="seo" className="mt-8">
