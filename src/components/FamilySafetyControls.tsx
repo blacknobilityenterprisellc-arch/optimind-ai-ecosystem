@@ -152,7 +152,6 @@ import {
   Fingerprint as FingerprintIcon,
   Key as KeyIcon,
   FileText as FileTextIcon,
-  BarChart3 as BarChart3Icon,
   Activity as ActivityIcon,
   Zap as ZapIcon,
   Cpu as CpuIcon,
