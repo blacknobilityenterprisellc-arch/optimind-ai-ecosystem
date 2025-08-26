@@ -24,7 +24,7 @@ import { AIImageOrganizer } from "@/components/AIImageOrganizer";
 import { AIPremiumEditor } from "@/components/AIPremiumEditor";
 import { AIStyleTransfer } from "@/components/AIStyleTransfer";
 import { AIPhotoRestoration } from "@/components/AIPhotoRestoration";
-import { AIBackgroundGenerator } from "@/components/AIBackgroundGenerator";
+import AIBackgroundGenerator from "@/components/AIBackgroundGenerator";
 import { PremiumAIServices } from "@/components/PremiumAIServices";
 import { scanMultiplePhotos } from "@/lib/scan-photos";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
@@ -76,7 +76,6 @@ import {
   Layers,
   Eraser,
   Replace,
-  Magic,
   Brush,
   ImageDown,
   Wrench,
@@ -815,11 +814,7 @@ export default function Home() {
                   Smart tagging and intelligent photo organization powered by advanced AI
                 </p>
               </div>
-              <AIImageOrganizer 
-                photos={photos}
-                onPhotosUpdate={setPhotos}
-                isPremium={isPremium}
-              />
+              <AIImageOrganizer />
               <AITaggingModule
                 photos={photos.map(p => ({
                   ...p,

@@ -226,7 +226,7 @@ export async function GET() {
       service: 'AI Premium Photo Editor API',
       version: '1.0.0',
       status: 'degraded',
-      error: error.message,
+      error: (error as Error)?.message || 'Unknown error',
       timestamp: new Date().toISOString()
     }, { status: 500 });
   }
