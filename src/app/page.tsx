@@ -22,7 +22,30 @@ import {
   Brain,
   Settings,
   Crown,
-  User
+  User,
+  Eye,
+  Smartphone,
+  Activity,
+  AlertTriangle,
+  RefreshCw,
+  Fingerprint,
+  Lock,
+  Monitor,
+  MousePointer,
+  Layers,
+  Bolt,
+  Sparkles,
+  ThumbsUp,
+  Loader2,
+  Clock,
+  Calendar,
+  Award,
+  Lightbulb,
+  EyeOff,
+  SmartphoneNfc,
+  Battery,
+  Wifi,
+  WifiOff
 } from "lucide-react";
 import AIPoweredResearchStrategy from "@/components/AIPoweredResearchStrategy";
 import ContentOptimizationRefresh from "@/components/ContentOptimizationRefresh";
