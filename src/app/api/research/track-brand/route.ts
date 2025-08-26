@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Brand tracking error:', error);
     return NextResponse.json(
-      { error: 'Failed to track brand mentions', details: error.message },
+      { error: 'Failed to track brand mentions', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
