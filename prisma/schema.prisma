@@ -13,12 +13,105 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Project {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  repositoryUrl String   @unique
+  status        ProjectStatus @default(IN_DEVELOPMENT)
+  visibility    ProjectVisibility @default(PUBLIC)
+  fileCount     Int
+  branchCount   Int
+  techStack     Json     // JSON array of technologies
+  features      Json     // JSON array of features
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  repositorySnapshots RepositorySnapshot[]
+  aiEcosystemInfo  AiEcosystemInfo?
+  verificationLogs VerificationLog[]
+
+  @@map("projects")
+}
+
+model RepositorySnapshot {
+  id        String   @id @default(cuid())
+  projectId String
+  branch    String
+  commitHash String?
+  fileCount Int
+  summary   String
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("repository_snapshots")
+}
+
+model AiEcosystemInfo {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  aiToolsCount    Int
+  modelsCount     Int
+  apiEndpoints   Int
+  uiComponents   Int
+  features        Json     // JSON array of AI features
+  integrations    Json     // JSON array of integrations
+  documentation   Json     // JSON array of documentation files
+  verification    Json     // JSON object with verification details
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("ai_ecosystem_info")
+}
+
+model VerificationLog {
+  id        String   @id @default(cuid())
+  projectId String
+  aiSystem  String   // e.g., "Grok", "ChatGPT", "Claude", "Gemini"
+  status    VerificationStatus
+  findings  String   // JSON string of findings
+  timestamp DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("verification_logs")
+}
+
+enum ProjectStatus {
+  IN_DEVELOPMENT
+  TESTING
+  PRODUCTION_READY
+  DEPLOYED
+  ARCHIVED
+}
+
+enum ProjectVisibility {
+  PRIVATE
+  PUBLIC
+  INTERNAL
+}
+
+enum VerificationStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  PARTIAL
+  NEEDS_REVIEW
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  posts Post[]
 }
 
 model Post {
@@ -29,4 +122,7 @@ model Post {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
