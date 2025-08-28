@@ -1,0 +1,3 @@
+[submodule "nextjs-tailwind-shadcn-ts"]
+	path = nextjs-tailwind-shadcn-ts
+	url = ./nextjs-tailwind-shadcn-ts
