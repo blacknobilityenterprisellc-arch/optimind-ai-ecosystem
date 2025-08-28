@@ -167,5 +167,4 @@ enum ImageStatus {
   PROCESSING
   COMPLETED
   FAILED
->>>>>>> f84491d84ea83433e971a912051d4a92d6e1c9fe
 }
