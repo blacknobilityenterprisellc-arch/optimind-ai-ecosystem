@@ -341,7 +341,7 @@ import {
   Geological,
   Astronomical,
   Cosmological,
-  Advanced,
+  Quantum,
   Relativistic,
   Newtonian,
   Einsteinian,
