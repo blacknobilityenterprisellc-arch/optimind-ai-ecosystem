@@ -1,5 +1,8 @@
 # 🚀 Deployment Guide
 
+**B.N.M.E. Black Nobility Management & Enterprise LLC**  
+*Parent Company of N.D.E. Nobility Digital Enterprises*
+
 Your Next.js application is now ready for deployment! Here's how to deploy it successfully.
 
 ## 📋 **Prerequisites**

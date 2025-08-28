@@ -1,5 +1,8 @@
 # 🚀 OptiMind AI Platform - Features Overview
 
+**B.N.M.E. Black Nobility Management & Enterprise LLC**  
+*Parent Company of N.D.E. Nobility Digital Enterprises*
+
 A comprehensive summary of all features and capabilities available in the OptiMind AI Platform.
 
 ## 📊 **At a Glance**

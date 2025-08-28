@@ -1,5 +1,8 @@
 # 🔍 GitHub Discovery Guide for OptiMind AI Platform
 
+**B.N.M.E. Black Nobility Management & Enterprise LLC**  
+*Parent Company of N.D.E. Nobility Digital Enterprises*
+
 This guide explains how the 32+ AI tools in the OptiMind AI Platform are now easily discoverable on GitHub.
 
 ## 📂 **Repository Structure**

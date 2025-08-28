@@ -134,7 +134,7 @@ https://www.contributor-covenant.org/translations.
 If you have any questions about this Code of Conduct or need to report a violation,
 please contact us at:
 
-- **Email**: [INSERT CONTACT EMAIL]
+- **Email**: blacknobilityenterprisellc@gmail.com
 - **GitHub Issues**: [Create an issue](https://github.com/blacknobilityenterprisellc-arch/OptiMind-AI-Ecosystem1/issues)
 - **Community Discussions**: [GitHub Discussions](https://github.com/blacknobilityenterprisellc-arch/OptiMind-AI-Ecosystem1/discussions)
 

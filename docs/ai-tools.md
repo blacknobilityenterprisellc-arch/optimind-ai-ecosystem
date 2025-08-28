@@ -1,5 +1,8 @@
 # 🤖 OptiMind AI Tools - Complete Guide
 
+**B.N.M.E. Black Nobility Management & Enterprise LLC**  
+*Parent Company of N.D.E. Nobility Digital Enterprises*
+
 This guide provides detailed information about all 32+ AI tools available in the OptiMind AI Platform.
 
 ## 📋 **Table of Contents**
