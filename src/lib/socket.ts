@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const setupSocket = (io: Server) => {
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
@@ -39,115 +40,23 @@ interface Activity {
   data?: any;
 }
 
+=======
+>>>>>>> d42c0d685ce849bd67e1864a8ab26a7276eeec64
 export const setupSocket = (io: Server) => {
-  const connectedUsers = new Map<string, User>();
-  const messages: Message[] = [];
-  const activities: Activity[] = [];
-
-  // Helper function to broadcast user count
-  const broadcastUserCount = () => {
-    io.emit('user_count', connectedUsers.size);
-  };
-
-  // Helper function to broadcast active users
-  const broadcastActiveUsers = () => {
-    const users = Array.from(connectedUsers.values());
-    io.emit('active_users', users);
-  };
-
-  // Helper function to add activity
-  const addActivity = (activity: Omit<Activity, 'id' | 'timestamp'>) => {
-    const newActivity: Activity = {
-      ...activity,
-      id: Date.now().toString(),
-      timestamp: new Date(),
-    };
-    activities.unshift(newActivity);
-    
-    // Keep only last 50 activities
-    if (activities.length > 50) {
-      activities.splice(50);
-    }
-    
-    io.emit('new_activity', newActivity);
-  };
-
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
-
-    // Send initial data
-    socket.emit('initial_data', {
-      messages: messages.slice(-50), // Last 50 messages
-      activities: activities.slice(-20), // Last 20 activities
-      userCount: connectedUsers.size,
-    });
-
-    // Handle user join
-    socket.on('user_join', (userData: { name: string; email: string }) => {
-      const user: User = {
-        id: socket.id,
-        name: userData.name,
-        email: userData.email,
-        joinedAt: new Date(),
-      };
-      
-      connectedUsers.set(socket.id, user);
-      
-      // Broadcast to all clients
-      io.emit('user_joined', user);
-      broadcastUserCount();
-      broadcastActiveUsers();
-      
-      addActivity({
-        type: 'user_joined',
-        description: `${user.name} joined the platform`,
-        userId: user.id,
-      });
-
-      // Send welcome message
-      socket.emit('message', {
-        id: Date.now().toString(),
-        text: `Welcome to the platform, ${user.name}!`,
-        senderId: 'system',
-        senderName: 'System',
-        timestamp: new Date(),
-        type: 'system',
-      });
-    });
-
+    
     // Handle messages
-    socket.on('message', (msg: { text: string; type?: 'user' | 'ai' }) => {
-      const user = connectedUsers.get(socket.id);
-      if (!user) return;
-
-      const message: Message = {
-        id: Date.now().toString(),
-        text: msg.text,
-        senderId: socket.id,
-        senderName: user.name,
-        timestamp: new Date(),
-        type: msg.type || 'user',
-      };
-
-      messages.push(message);
-      
-      // Keep only last 100 messages
-      if (messages.length > 100) {
-        messages.splice(0, messages.length - 100);
-      }
-
-      // Broadcast to all clients
-      io.emit('message', message);
-
-      // Add activity
-      addActivity({
-        type: msg.type === 'ai' ? 'ai_query' : 'message_sent',
-        description: `${user.name} sent a ${msg.type === 'ai' ? 'AI query' : 'message'}`,
-        userId: user.id,
-        data: { messageId: message.id },
+    socket.on('message', (msg: { text: string; senderId: string }) => {
+      // Echo: broadcast message only the client who send the message
+      socket.emit('message', {
+        text: `Echo: ${msg.text}`,
+        senderId: 'system',
+        timestamp: new Date().toISOString(),
       });
     });
 
+<<<<<<< HEAD
     // Handle AI response simulation (for demo purposes)
     socket.on('ai_response', (data: { queryId: string; response: string }) => {
       const message: Message = {
@@ -291,18 +200,21 @@ export const setupSocket = (io: Server) => {
           userId: user.id,
         });
       }
+=======
+    // Handle disconnect
+    socket.on('disconnect', () => {
+      console.log('Client disconnected:', socket.id);
+>>>>>>> d42c0d685ce849bd67e1864a8ab26a7276eeec64
     });
 
-    // Send periodic updates
-    setInterval(() => {
-      if (connectedUsers.has(socket.id)) {
-        socket.emit('heartbeat', {
-          timestamp: new Date(),
-          userCount: connectedUsers.size,
-        });
-      }
-    }, 30000); // Every 30 seconds
+    // Send welcome message
+    socket.emit('message', {
+      text: 'Welcome to WebSocket Echo Server!',
+      senderId: 'system',
+      timestamp: new Date().toISOString(),
+    });
   });
+<<<<<<< HEAD
 
   // Global system events
   setInterval(() => {
@@ -314,4 +226,6 @@ export const setupSocket = (io: Server) => {
     }
   }, 300000); // Every 5 minutes
 >>>>>>> 810ae400916ac3a858f3738237e3376f277d0d25
+=======
+>>>>>>> d42c0d685ce849bd67e1864a8ab26a7276eeec64
 };
