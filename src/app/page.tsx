@@ -1,8 +1,39 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    // Navigate to dashboard or main app interface
+    router.push("/dashboard");
+  };
+
+  const handleLearnMore = () => {
+    // Navigate to features page or scroll to features section
+    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleStartTrial = () => {
+    // Navigate to signup/trial page
+    router.push("/signup");
+  };
+
+  const handleScheduleDemo = () => {
+    // Navigate to demo scheduling page
+    router.push("/demo");
+  };
+
+  const handleFeatureClick = (feature: string) => {
+    // Navigate to specific feature page
+    router.push(`/features/${feature.toLowerCase().replace(/\s+/g, "-")}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Hero Section */}
@@ -25,10 +56,19 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="px-8 py-3 text-lg">
+              <Button 
+                size="lg" 
+                className="px-8 py-3 text-lg"
+                onClick={handleGetStarted}
+              >
                 Get Started
               </Button>
-              <Button variant="outline" size="lg" className="px-8 py-3 text-lg">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="px-8 py-3 text-lg"
+                onClick={handleLearnMore}
+              >
                 Learn More
               </Button>
             </div>
@@ -37,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="container mx-auto px-4 py-24">
+      <div id="features" className="container mx-auto px-4 py-24">
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold">Core Capabilities</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -46,7 +86,10 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+          <Card 
+            className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+            onClick={() => handleFeatureClick("Intelligent Automation")}
+          >
             <CardHeader>
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 🧠
@@ -58,7 +101,10 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+          <Card 
+            className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+            onClick={() => handleFeatureClick("Advanced Analytics")}
+          >
             <CardHeader>
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 📊
@@ -70,7 +116,10 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+          <Card 
+            className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+            onClick={() => handleFeatureClick("AI Assistant")}
+          >
             <CardHeader>
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 🤖
@@ -119,6 +168,74 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Quick Actions Section */}
+      <div className="container mx-auto px-4 py-24">
+        <div className="text-center space-y-4 mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold">Quick Access</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Explore our AI-powered tools and services
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/chat">
+            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  💬
+                </div>
+                <CardTitle className="text-lg">AI Chat</CardTitle>
+                <CardDescription>
+                  Chat with our advanced AI assistant
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/analyze">
+            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  🔍
+                </div>
+                <CardTitle className="text-lg">Data Analysis</CardTitle>
+                <CardDescription>
+                  Analyze data with AI-powered insights
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/generate">
+            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  ✨
+                </div>
+                <CardTitle className="text-lg">Content Generator</CardTitle>
+                <CardDescription>
+                  Create content with AI assistance
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/search">
+            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  🔎
+                </div>
+                <CardTitle className="text-lg">Smart Search</CardTitle>
+                <CardDescription>
+                  Intelligent search with AI understanding
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        </div>
+      </div>
+
       {/* CTA Section */}
       <div className="container mx-auto px-4 py-24">
         <div className="text-center space-y-8">
@@ -127,10 +244,19 @@ export default function Home() {
             Join the future of AI-powered business operations with OptiMind AI Ecosystem
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="px-8 py-3 text-lg">
+            <Button 
+              size="lg" 
+              className="px-8 py-3 text-lg"
+              onClick={handleStartTrial}
+            >
               Start Free Trial
             </Button>
-            <Button variant="outline" size="lg" className="px-8 py-3 text-lg">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="px-8 py-3 text-lg"
+              onClick={handleScheduleDemo}
+            >
               Schedule Demo
             </Button>
           </div>
