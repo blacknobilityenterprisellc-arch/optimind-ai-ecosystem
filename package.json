@@ -1,5 +1,5 @@
 {
-  "name": "nextjs_tailwind_shadcn_ts",
+  "name": "optimind-ai-ecosystem",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -80,7 +80,6 @@
     "tsx": "^4.20.3",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
-    "z-ai-web-dev-sdk": "^0.0.10",
     "zod": "^4.0.2",
     "zustand": "^5.0.6"
   },

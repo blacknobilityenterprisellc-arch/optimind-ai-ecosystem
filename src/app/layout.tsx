@@ -14,21 +14,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "OptiMind AI Ecosystem - Intelligent AI Platform",
+  description: "A comprehensive artificial intelligence platform designed to revolutionize how businesses and individuals interact with advanced AI technologies.",
+  keywords: ["OptiMind", "AI", "Artificial Intelligence", "Machine Learning", "Automation", "Analytics", "Next.js", "TypeScript", "Tailwind CSS"],
+  authors: [{ name: "OptiMind AI Team" }],
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "OptiMind AI Ecosystem",
+    description: "Comprehensive AI platform for intelligent automation and analytics",
+    url: "https://optimind.ai",
+    siteName: "OptiMind AI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "OptiMind AI Ecosystem",
+    description: "Comprehensive AI platform for intelligent automation and analytics",
   },
 };
 
